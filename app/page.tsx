@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import FeedbackForm from '@/components/FeedbackForm'
-import FeedbackList from '@/components/FeedbackList'
-import { Feedback, FeedbackFormData } from '@/types/feedback'
+import FeedbackForm from '../components/FeedbackForm'
+import FeedbackList from '../components/FeedbackList'
+import { Feedback, FeedbackFormData } from '../types/feedback'
 
 export default function HomePage() {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([])

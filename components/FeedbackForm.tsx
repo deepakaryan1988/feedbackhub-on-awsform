@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { FeedbackFormData } from '@/types/feedback'
+import { FeedbackFormData } from '../types/feedback'
 
 interface FeedbackFormProps {
   onSubmit: (data: FeedbackFormData) => Promise<void>

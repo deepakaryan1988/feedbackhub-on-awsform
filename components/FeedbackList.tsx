@@ -1,4 +1,4 @@
-import { Feedback } from '@/types/feedback'
+import { Feedback } from '../types/feedback'
 
 interface FeedbackListProps {
   feedbacks: Feedback[]

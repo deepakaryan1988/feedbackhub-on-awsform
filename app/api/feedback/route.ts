@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getDb } from '@/lib/mongodb'
-import { Feedback, FeedbackFormData, ApiResponse } from '@/types/feedback'
+import { getDb } from '../../../lib/mongodb'
+import { Feedback, FeedbackFormData, ApiResponse } from '../../../types/feedback'
 
 export async function GET(): Promise<NextResponse<ApiResponse<Feedback[]>>> {
   try {
@@ -15,7 +15,7 @@ export async function GET(): Promise<NextResponse<ApiResponse<Feedback[]>>> {
 
     return NextResponse.json({
       success: true,
-      data: feedbacks as Feedback[]
+      data: feedbacks as unknown as Feedback[]
     })
   } catch (error) {
     console.error('Error fetching feedbacks:', error)
