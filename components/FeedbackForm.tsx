@@ -42,7 +42,7 @@ export default function FeedbackForm({ onSubmit, isLoading = false }: FeedbackFo
           value={formData.name}
           onChange={handleChange}
           required
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500"
           placeholder="Enter your name"
           disabled={isLoading}
         />
@@ -59,7 +59,7 @@ export default function FeedbackForm({ onSubmit, isLoading = false }: FeedbackFo
           onChange={handleChange}
           required
           rows={4}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500"
           placeholder="Enter your feedback message"
           disabled={isLoading}
         />
@@ -68,7 +68,7 @@ export default function FeedbackForm({ onSubmit, isLoading = false }: FeedbackFo
       <button
         type="submit"
         disabled={isLoading || !formData.name.trim() || !formData.message.trim()}
-        className="w-full bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {isLoading ? 'Submitting...' : 'Submit Feedback'}
       </button>

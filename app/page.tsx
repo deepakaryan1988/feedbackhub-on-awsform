@@ -42,8 +42,14 @@ export default function HomePage() {
 
       const data = await response.json()
       if (data.success) {
-        // Refresh the feedback list
-        await fetchFeedbacks()
+        // Add the new feedback to the list immediately
+        const newFeedback: Feedback = {
+          _id: data.data._id,
+          name: formData.name,
+          message: formData.message,
+          createdAt: new Date()
+        }
+        setFeedbacks(prev => [newFeedback, ...prev])
       } else {
         console.error('Error submitting feedback:', data.error)
       }
