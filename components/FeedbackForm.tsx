@@ -1,7 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { FeedbackFormData } from '../types/feedback'
+import { formField, buttonTap } from '../lib/animations'
+import LoadingSpinner from './LoadingSpinner'
 
 interface FeedbackFormProps {
   onSubmit: (data: FeedbackFormData) => Promise<void>
@@ -30,9 +33,15 @@ export default function FeedbackForm({ onSubmit, isLoading = false }: FeedbackFo
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div>
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+    <motion.form 
+      onSubmit={handleSubmit} 
+      className="space-y-6"
+      initial="hidden"
+      animate="visible"
+      variants={formField}
+    >
+      <motion.div variants={formField}>
+        <label htmlFor="name" className="block text-sm font-medium text-neutral-200 mb-2">
           Name *
         </label>
         <input
@@ -42,14 +51,14 @@ export default function FeedbackForm({ onSubmit, isLoading = false }: FeedbackFo
           value={formData.name}
           onChange={handleChange}
           required
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500"
+          className="w-full px-4 py-3 bg-neutral-700/50 border border-neutral-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white placeholder-neutral-400 transition-all backdrop-blur-sm"
           placeholder="Enter your name"
           disabled={isLoading}
         />
-      </div>
+      </motion.div>
       
-      <div>
-        <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+      <motion.div variants={formField}>
+        <label htmlFor="message" className="block text-sm font-medium text-neutral-200 mb-2">
           Message *
         </label>
         <textarea
@@ -59,19 +68,29 @@ export default function FeedbackForm({ onSubmit, isLoading = false }: FeedbackFo
           onChange={handleChange}
           required
           rows={4}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500"
+          className="w-full px-4 py-3 bg-neutral-700/50 border border-neutral-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white placeholder-neutral-400 transition-all backdrop-blur-sm resize-none"
           placeholder="Enter your feedback message"
           disabled={isLoading}
         />
-      </div>
+      </motion.div>
       
-      <button
+      <motion.button
         type="submit"
         disabled={isLoading || !formData.name.trim() || !formData.message.trim()}
-        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg"
+        variants={buttonTap}
+        whileHover="hover"
+        whileTap="tap"
       >
-        {isLoading ? 'Submitting...' : 'Submit Feedback'}
-      </button>
-    </form>
+        {isLoading ? (
+          <>
+            <LoadingSpinner size="sm" className="border-white border-t-white" />
+            <span>Submitting...</span>
+          </>
+        ) : (
+          'Submit Feedback'
+        )}
+      </motion.button>
+    </motion.form>
   )
 } 
