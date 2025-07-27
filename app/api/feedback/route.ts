@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getDb } from '../../../lib/mongodb'
-import { Feedback, FeedbackFormData, ApiResponse } from '../../../types/feedback'
+import { getDb } from '../../lib/mongodb'
+import { Feedback, FeedbackFormData, ApiResponse } from '../../types/feedback'
 
 export async function GET(): Promise<NextResponse<ApiResponse<Feedback[]>>> {
   try {

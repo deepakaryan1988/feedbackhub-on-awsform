@@ -10,13 +10,70 @@ A production-ready feedback system built with Next.js 14, designed for deploymen
 - **Production Ready**: Optimized for AWS ECS Fargate deployment
 - **Containerized**: Docker support with multi-stage builds
 - **Type Safe**: Full TypeScript support throughout the application
+- **Infrastructure as Code**: Terraform-based AWS infrastructure
+- **DevOps Ready**: Modular structure for team collaboration
 
 ## 📋 Prerequisites
 
 - Node.js 20+ 
 - npm or yarn
 - Docker (for containerized deployment)
+- AWS CLI (for infrastructure deployment)
+- Terraform (for infrastructure management)
 - MongoDB database (Atlas or self-hosted)
+
+## 🏗️ Project Structure
+
+This project follows industry-standard practices with a modular, DevOps-ready structure:
+
+```
+.
+├── app/                     # Next.js application code
+│   ├── api/                 # API routes
+│   ├── components/          # React components
+│   ├── lib/                 # Utility libraries
+│   ├── types/               # TypeScript type definitions
+│   ├── globals.css          # Global styles
+│   ├── layout.tsx           # Root layout
+│   └── page.tsx             # Home page
+│
+├── docker/                  # Docker-related files
+│   ├── Dockerfile           # Multi-stage Docker build
+│   ├── docker-compose.yml   # Local development setup
+│   ├── mongo-init.js        # MongoDB initialization script
+│   └── .dockerignore        # Docker ignore file
+│
+├── infra/                   # Terraform composition and scripts
+│   ├── *.tf                 # Main Terraform files
+│   ├── *.tfvars*            # Terraform variables
+│   ├── deploy.sh            # Deployment script
+│   ├── build-and-push.sh    # Docker build and push script
+│   └── get-vpc-info.sh      # VPC information script
+│
+├── terraform/               # Modular Terraform components
+│   ├── alb/                 # Application Load Balancer
+│   ├── cloudwatch/          # CloudWatch logs and monitoring
+│   ├── ecs/                 # ECS cluster and service
+│   └── secrets/             # AWS Secrets Manager
+│
+├── scripts/                 # Helper and CI/CD scripts
+│   └── build.sh             # Build script
+│
+├── docs/                    # Documentation
+│   ├── structure.md         # Project structure guide
+│   ├── infra-overview.md    # Infrastructure overview
+│   ├── deployment.md        # Deployment guide
+│   └── env-setup.md         # Environment setup guide
+│
+├── .gitignore               # Git ignore rules
+├── env.example              # Environment variables example
+├── README.md                # Project README
+├── tailwind.config.js       # Tailwind CSS configuration
+├── postcss.config.js        # PostCSS configuration
+├── tsconfig.json            # TypeScript configuration
+├── package.json             # Node.js dependencies
+└── package-lock.json        # Locked dependencies
+```
 
 ## 🛠️ Local Development
 
@@ -50,7 +107,12 @@ PORT=3000
 ### 4. Run Development Server
 
 ```bash
+# Using Node.js directly
 npm run dev
+
+# Using Docker Compose (recommended for full-stack testing)
+cd docker/
+docker-compose up -d
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view the application.
@@ -68,7 +130,8 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 ### Build the Docker Image
 
 ```bash
-docker build -t feedbackhub .
+cd docker/
+docker build -t feedbackhub ..
 ```
 
 ### Run the Container
@@ -80,88 +143,66 @@ docker run -p 3000:3000 \
   feedbackhub
 ```
 
-### Docker Compose (Optional)
+### Docker Compose
 
-Create a `docker-compose.yml` file for local development:
+The project includes a `docker-compose.yml` file for local development:
 
-```yaml
-version: '3.8'
-services:
-  app:
-    build: .
-    ports:
-      - "3000:3000"
-    environment:
-      - MONGODB_URI=mongodb://mongo:27017/feedbackhub
-      - NODE_ENV=production
-    depends_on:
-      - mongo
-  
-  mongo:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-
-volumes:
-  mongo_data:
-```
-
-Run with:
 ```bash
+cd docker/
 docker-compose up -d
 ```
 
+This will start both the application and a local MongoDB instance.
+
 ## ☁️ AWS ECS Fargate Deployment
 
-This application is designed for deployment on AWS ECS Fargate. The Docker image is optimized for:
+This application is designed for deployment on AWS ECS Fargate with a complete infrastructure-as-code approach.
 
-- **Multi-stage builds** for smaller production images
-- **Non-root user** for security
-- **Health checks** and proper logging
-- **Environment variable** configuration
-- **Port 3000** exposure (configurable via `PORT` env var)
+### Quick Start
+
+1. **Deploy Infrastructure**:
+   ```bash
+   cd infra/
+   terraform init
+   terraform apply
+   ```
+
+2. **Build and Deploy Application**:
+   ```bash
+   ./build-and-push.sh
+   ./deploy.sh
+   ```
+
+3. **Verify Deployment**:
+   ```bash
+   # Get ALB DNS name
+   ALB_DNS=$(terraform output -raw alb_dns_name)
+   curl http://$ALB_DNS/api/health
+   ```
+
+### Infrastructure Components
+
+- **ECS Fargate Cluster**: Containerized application hosting
+- **Application Load Balancer**: Traffic distribution and health checks
+- **ECR Repository**: Docker image storage
+- **CloudWatch Logs**: Application logging and monitoring
+- **Secrets Manager**: Secure credential storage
+- **IAM Roles**: Least-privilege access control
 
 ### Environment Variables for ECS
 
-- `MONGODB_URI` - MongoDB connection string (required)
+- `MONGODB_URI` - MongoDB connection string (from Secrets Manager)
 - `PORT` - Application port (defaults to 3000)
 - `NODE_ENV` - Environment (set to 'production')
 
-### Infrastructure
+## 📚 Documentation
 
-Terraform-based AWS infrastructure is under construction and will include:
-- ECS Fargate cluster
-- Application Load Balancer
-- RDS or DocumentDB for MongoDB
-- CloudWatch logging
-- Auto-scaling policies
+Comprehensive documentation is available in the `docs/` directory:
 
-## 📁 Project Structure
-
-```
-feedbackhub-on-awsform/
-├── app/                    # Next.js 14 app directory
-│   ├── api/               # API routes
-│   ├── globals.css        # Global styles
-│   ├── layout.tsx         # Root layout
-│   └── page.tsx           # Homepage
-├── components/            # React components
-│   ├── FeedbackForm.tsx   # Feedback submission form
-│   └── FeedbackList.tsx   # Feedback display component
-├── lib/                   # Utility libraries
-│   └── mongodb.ts         # MongoDB connection utility
-├── types/                 # TypeScript type definitions
-│   └── feedback.ts        # Feedback-related types
-├── Dockerfile             # Production Docker configuration
-├── .dockerignore          # Docker build exclusions
-├── .gitignore             # Git exclusions
-├── next.config.js         # Next.js configuration
-├── package.json           # Dependencies and scripts
-├── tailwind.config.js     # Tailwind CSS configuration
-└── tsconfig.json          # TypeScript configuration
-```
+- **[Project Structure](docs/structure.md)** - Detailed project organization
+- **[Infrastructure Overview](docs/infra-overview.md)** - AWS architecture and components
+- **[Deployment Guide](docs/deployment.md)** - Step-by-step deployment instructions
+- **[Environment Setup](docs/env-setup.md)** - Development and production environment setup
 
 ## 🔧 API Endpoints
 
@@ -207,6 +248,20 @@ Creates a new feedback entry
 }
 ```
 
+### GET /api/health
+Health check endpoint for load balancer and monitoring
+
+**Response:**
+```json
+{
+  "status": "healthy",
+  "timestamp": "2024-01-01T00:00:00.000Z",
+  "service": "feedbackhub",
+  "version": "1.0.0",
+  "database": "connected"
+}
+```
+
 ## 🛡️ Security Considerations
 
 - All environment variables are properly handled
@@ -215,6 +270,9 @@ Creates a new feedback entry
 - CORS headers configured
 - XSS protection enabled
 - Content-Type validation
+- IAM roles with least privilege
+- Secrets stored in AWS Secrets Manager
+- VPC with private subnets for ECS tasks
 
 ## 📝 Contributing
 
@@ -233,7 +291,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 For support and questions:
 - Create an issue in the GitHub repository
 - Contact the development team
+- Check the documentation in the `docs/` directory
 
 ---
 
-**Built with ❤️ for AWS ECS Fargate deployment**
+**Built with ❤️ for AWS ECS Fargate deployment with modern DevOps practices**

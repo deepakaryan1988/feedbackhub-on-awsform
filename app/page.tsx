@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import FeedbackForm from '../components/FeedbackForm'
-import FeedbackList from '../components/FeedbackList'
-import HeroSection from '../components/HeroSection'
-import BackgroundPattern from '../components/BackgroundPattern'
-import { Feedback, FeedbackFormData } from '../types/feedback'
-import { pageFadeIn, fadeInUp, staggerContainer } from '../lib/animations'
+import FeedbackForm from './components/FeedbackForm'
+import FeedbackList from './components/FeedbackList'
+import HeroSection from './components/HeroSection'
+import BackgroundPattern from './components/BackgroundPattern'
+import { Feedback, FeedbackFormData } from './types/feedback'
+import { pageFadeIn, fadeInUp, staggerContainer } from './lib/animations'
 
 export default function HomePage() {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([])

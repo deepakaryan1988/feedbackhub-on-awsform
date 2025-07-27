@@ -20,12 +20,13 @@ ecs_cpu = 512          # 0.5 vCPU
 ecs_memory = 1024      # 1 GB RAM
 ecs_desired_count = 2  # 2 tasks for high availability
 ecs_min_capacity = 1   # Minimum 1 task
-ecs_max_capacity = 5   # Maximum 5 tasks for auto-scaling
+ecs_max_capacity = 2   # Maximum 2 tasks (no auto-scaling for now)
+enable_autoscaling = false  # Disable auto-scaling due to IAM permissions
 
 # Monitoring Configuration
 log_retention_days = 30
 create_cloudwatch_dashboard = true
-create_cloudwatch_alarms = true
+create_cloudwatch_alarms = false
 cpu_threshold = 70     # Scale up when CPU > 70%
 memory_threshold = 80  # Scale up when Memory > 80%
 
