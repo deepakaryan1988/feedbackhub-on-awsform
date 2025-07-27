@@ -1,15 +1,26 @@
 import { MongoClient, Db } from 'mongodb'
 
-// For build time, use a dummy URI if none is provided
-const mongoUri = process.env.MONGODB_URI || 'mongodb://dummy:27017/dummy'
+// Get MongoDB URI from environment variables
+const mongoUri = process.env.MONGO_URL || 'mongodb+srv://<USERNAME>:<PASSWORD>@<CLUSTER_URL>/feedbackhub?retryWrites=true&w=majority'
 
 const uri = mongoUri
-const options = {}
+const options = {
+  // Add connection options for better reliability
+  maxPoolSize: 10,
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
+}
 
 let client: MongoClient
 let clientPromise: Promise<MongoClient>
 
-if (process.env.NODE_ENV === 'development') {
+// Check if we're in a browser environment
+const isBrowser = typeof window !== 'undefined'
+
+if (isBrowser) {
+  // In browser environment, we can't connect to MongoDB directly
+  clientPromise = Promise.reject(new Error('MongoDB not available in browser'))
+} else if (process.env.NODE_ENV === 'development') {
   // In development mode, use a global variable so that the value
   // is preserved across module reloads caused by HMR (Hot Module Replacement).
   let globalWithMongo = global as typeof globalThis & {
@@ -32,11 +43,23 @@ if (process.env.NODE_ENV === 'development') {
 export default clientPromise
 
 export async function getDb(): Promise<Db> {
-  const client = await clientPromise
-  return client.db()
+  try {
+    const client = await clientPromise
+    return client.db()
+  } catch (error) {
+    console.error('Database connection failed:', error)
+    throw new Error('Database connection failed. Please check your MongoDB configuration.')
+  }
 }
 
 export async function closeConnection(): Promise<void> {
-  const client = await clientPromise
-  await client.close()
-} 
+  try {
+    const client = await clientPromise
+    await client.close()
+  } catch (error) {
+    // Ignore errors when closing connection
+    console.log('Error closing database connection:', error)
+  }
+}
+
+ 

@@ -1,13 +1,14 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import ClientLayout from './components/layout/client-layout'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'FeedbackHub - AWS ECS Fargate Deployment',
-  description: 'A production-ready feedback system built with Next.js 14 for AWS ECS Fargate deployment',
-  keywords: ['feedback', 'nextjs', 'aws', 'ecs', 'fargate'],
+  title: 'FeedbackHub - Modern Feedback Platform',
+  description: 'A modern, accessible feedback platform built with Next.js and shadcn/ui',
+  keywords: ['feedback', 'nextjs', 'shadcn', 'ui', 'modern'],
   authors: [{ name: 'FeedbackHub Team' }],
 }
 
@@ -22,11 +23,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <div className="min-h-screen bg-gray-50">
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.className} antialiased`}>
+        <ClientLayout>
           {children}
-        </div>
+        </ClientLayout>
       </body>
     </html>
   )

@@ -18,11 +18,11 @@ export async function GET(): Promise<NextResponse<ApiResponse<Feedback[]>>> {
       data: feedbacks as unknown as Feedback[]
     })
   } catch (error) {
-    console.error('Error fetching feedbacks:', error)
+    console.error('Database connection failed:', error)
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to fetch feedbacks'
+        error: 'Failed to connect to database'
       },
       { status: 500 }
     )
@@ -44,15 +44,15 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
       )
     }
 
-    const db = await getDb()
-    const collection = db.collection('feedbacks')
-    
     const feedback: Omit<Feedback, '_id'> = {
       name: body.name.trim(),
       message: body.message.trim(),
       createdAt: new Date()
     }
 
+    const db = await getDb()
+    const collection = db.collection('feedbacks')
+    
     const result = await collection.insertOne(feedback)
     
     const insertedFeedback: Feedback = {

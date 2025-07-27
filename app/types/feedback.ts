@@ -2,7 +2,7 @@ export interface Feedback {
   _id?: string
   name: string
   message: string
-  createdAt: Date
+  createdAt: Date | string
 }
 
 export interface FeedbackFormData {

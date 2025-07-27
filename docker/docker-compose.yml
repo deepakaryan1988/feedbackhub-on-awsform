@@ -8,31 +8,13 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - MONGODB_URI=mongodb://mongo:27017/feedbackhub
+      - MONGO_URL=mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_CLUSTER_URL}/feedbackhub?retryWrites=true&w=majority
       - NODE_ENV=production
       - PORT=3000
-    depends_on:
-      - mongo
+      - NEXT_TELEMETRY_DISABLED=1
     restart: unless-stopped
     networks:
       - feedbackhub-network
-
-  mongo:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    environment:
-      - MONGO_INITDB_DATABASE=feedbackhub
-    volumes:
-      - mongo_data:/data/db
-      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-    restart: unless-stopped
-    networks:
-      - feedbackhub-network
-
-volumes:
-  mongo_data:
-    driver: local
 
 networks:
   feedbackhub-network:

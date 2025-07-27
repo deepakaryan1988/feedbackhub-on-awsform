@@ -1,6 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  // Use standalone output for production Docker
+  ...(process.env.NODE_ENV === 'production' && { output: 'standalone' }),
+  
+  // Configure for Docker development
+  webpack: (config, { dev, isServer }) => {
+    // Optimize for development
+    if (dev) {
+      config.watchOptions = {
+        poll: 1000,
+        aggregateTimeout: 300,
+      }
+    }
+    return config
+  },
+  
   async headers() {
     return [
       {

@@ -8,17 +8,26 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "dev:atlas": "next dev"
   },
   "dependencies": {
+    "@radix-ui/react-icons": "1.3.2",
+    "@radix-ui/react-slot": "1.2.3",
+    "@radix-ui/react-toast": "1.2.14",
     "autoprefixer": "^10.4.16",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
     "framer-motion": "12.23.9",
+    "lucide-react": "0.526.0",
     "mongodb": "^6.3.0",
     "next": "14.0.4",
     "postcss": "^8.4.32",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwindcss": "^3.3.6"
+    "tailwind-merge": "3.3.1",
+    "tailwindcss": "^3.3.6",
+    "tailwindcss-animate": "1.0.7"
   },
   "devDependencies": {
     "@types/node": "^20.10.5",
