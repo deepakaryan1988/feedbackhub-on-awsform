@@ -56,7 +56,8 @@ resource "aws_iam_role_policy" "github_actions_policy" {
           "ecs:RegisterTaskDefinition",
           "ecs:UpdateService",
           "logs:CreateLogStream",
-          "logs:PutLogEvents"
+          "logs:PutLogEvents",
+          "elasticloadbalancing:DescribeTargetHealth"
         ]
         Resource = "*"
       },
