@@ -23,11 +23,45 @@ const getMongoConfig = () => {
   const isDevelopment = nodeEnv === 'development'
   console.log(`🔧 MongoDB Config: NODE_ENV=${nodeEnv}, isDevelopment=${isDevelopment}`)
   
+  // Check if we're in a build environment (no runtime secrets available)
+  const isBuildTime = typeof window === 'undefined' && 
+    (!process.env.MONGODB_URI || process.env.MONGODB_URI.includes('mongo:27017') || process.env.MONGODB_URI.includes('localhost:27017'))
+  if (isBuildTime) {
+    console.log('🔧 Build time detected, using mock configuration')
+    return {
+      uri: 'mongodb://localhost:27017/feedbackhub',
+      database: 'feedbackhub',
+      username: 'build-time',
+      environment: 'build',
+      strategy: 'build-time-mock'
+    }
+  }
+  
   // Try multiple connection strategies
   const connectionStrategies = [
-    // Strategy 1: Full MongoDB Atlas with password
+    // Strategy 1: Direct MONGODB_URI from environment (production)
     () => {
-      const clusterHost = 'your-cluster-hostname.mongodb.net'
+      const mongoUri = process.env.MONGODB_URI
+      console.log(`🔍 Strategy 1: MONGODB_URI=${mongoUri ? mongoUri.substring(0, 50) + '...' : 'NOT SET'}`)
+      if (!mongoUri) {
+        throw new Error('MONGODB_URI not set')
+      }
+      
+      // Parse URI to extract database name
+      const dbName = mongoUri.split('/').pop()?.split('?')[0] || 'feedbackhub'
+      
+      return {
+        uri: mongoUri,
+        database: dbName,
+        username: 'from-uri',
+        environment: isDevelopment ? 'development' : 'production',
+        strategy: 'direct-uri'
+      }
+    },
+    
+    // Strategy 2: Full MongoDB Atlas with password
+    () => {
+      const clusterHost = 'cluster0.is0hvmh.mongodb.net'
       const password = process.env.MONGODB_PASSWORD
       if (!password) {
         throw new Error('MONGODB_PASSWORD not set')
@@ -53,25 +87,6 @@ const getMongoConfig = () => {
         username: config.username,
         environment: config.environment,
         strategy: 'mongodb-atlas'
-      }
-    },
-    
-    // Strategy 2: Direct MONGODB_URI from environment
-    () => {
-      const mongoUri = process.env.MONGODB_URI
-      if (!mongoUri) {
-        throw new Error('MONGODB_URI not set')
-      }
-      
-      // Parse URI to extract database name
-      const dbName = mongoUri.split('/').pop()?.split('?')[0] || 'feedbackhub'
-      
-      return {
-        uri: mongoUri,
-        database: dbName,
-        username: 'from-uri',
-        environment: isDevelopment ? 'development' : 'production',
-        strategy: 'direct-uri'
       }
     },
     
@@ -177,8 +192,46 @@ if (isBrowser) {
 
   if (!globalWithMongo._mongoClientPromise) {
     const config = getCurrentMongoConfig()
+    
+    // If this is a build-time mock configuration, don't actually connect
+    if (config.strategy === 'build-time-mock') {
+      console.log('🔧 Build time: Skipping actual MongoDB connection')
+      globalWithMongo._mongoClientPromise = Promise.resolve(null as any)
+    } else {
+      client = new MongoClient(config.uri, connectionOptions)
+      globalWithMongo._mongoClientPromise = client.connect()
+        .then(client => {
+          console.log(`✅ Connected to MongoDB as '${config.username}' user`)
+          console.log(`📊 Database: ${config.database}`)
+          console.log(`🌍 Environment: ${config.environment}`)
+          console.log(`🔧 Strategy: ${config.strategy}`)
+          if (config.strategy === 'mongodb-atlas') {
+            console.log(`🔗 Cluster: ${config.uri.split('@')[1].split('/')[0]}`)
+          }
+          return client
+        })
+        .catch(error => {
+          console.error('❌ MongoDB connection failed:')
+          console.error(`   Environment: ${config.environment}`)
+          console.error(`   User: ${config.username}`)
+          console.error(`   Database: ${config.database}`)
+          console.error(`   Error: ${error.message}`)
+          throw error
+        })
+    }
+  }
+  clientPromise = globalWithMongo._mongoClientPromise
+} else {
+  // In production mode, it's best to not use a global variable.
+  const config = getCurrentMongoConfig()
+  
+  // If this is a build-time mock configuration, don't actually connect
+  if (config.strategy === 'build-time-mock') {
+    console.log('🔧 Build time: Skipping actual MongoDB connection')
+    clientPromise = Promise.resolve(null as any)
+  } else {
     client = new MongoClient(config.uri, connectionOptions)
-    globalWithMongo._mongoClientPromise = client.connect()
+    clientPromise = client.connect()
       .then(client => {
         console.log(`✅ Connected to MongoDB as '${config.username}' user`)
         console.log(`📊 Database: ${config.database}`)
@@ -198,30 +251,6 @@ if (isBrowser) {
         throw error
       })
   }
-  clientPromise = globalWithMongo._mongoClientPromise
-} else {
-  // In production mode, it's best to not use a global variable.
-  const config = getCurrentMongoConfig()
-  client = new MongoClient(config.uri, connectionOptions)
-  clientPromise = client.connect()
-    .then(client => {
-      console.log(`✅ Connected to MongoDB as '${config.username}' user`)
-      console.log(`📊 Database: ${config.database}`)
-      console.log(`🌍 Environment: ${config.environment}`)
-      console.log(`🔧 Strategy: ${config.strategy}`)
-      if (config.strategy === 'mongodb-atlas') {
-        console.log(`🔗 Cluster: ${config.uri.split('@')[1].split('/')[0]}`)
-      }
-      return client
-    })
-    .catch(error => {
-      console.error('❌ MongoDB connection failed:')
-      console.error(`   Environment: ${config.environment}`)
-      console.error(`   User: ${config.username}`)
-      console.error(`   Database: ${config.database}`)
-      console.error(`   Error: ${error.message}`)
-      throw error
-    })
 }
 
 // Export a module-scoped MongoClient promise. By doing this in a
@@ -231,6 +260,12 @@ export default clientPromise
 export async function getDb(): Promise<Db> {
   try {
     const client = await clientPromise
+    
+    // Handle build-time mock configuration
+    if (!client) {
+      throw new Error('MongoDB not available during build time')
+    }
+    
     const db = client.db()
     
     // Test the connection with a ping

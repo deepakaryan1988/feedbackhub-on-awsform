@@ -12,7 +12,7 @@ public_subnet_ids = [
 # Application Configuration
 app_name = "feedbackhub"
 ecr_image_url = "442740305597.dkr.ecr.ap-south-1.amazonaws.com/feedbackhub:latest"
-mongodb_uri = "mongodb+srv://feedbackhub:password123@cluster0.mongodb.net/feedbackhub?retryWrites=true&w=majority"
+mongodb_uri = "mongodb+srv://feedbackhub:Deepakaryan1988@cluster0.is0hvmh.mongodb.net/feedbackhub_prod_db?retryWrites=true&w=majority&appName=Cluster0"
 app_port = 3000
 
 # ECS Configuration - Optimized for production
