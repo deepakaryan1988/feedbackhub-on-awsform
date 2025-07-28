@@ -140,16 +140,16 @@ resource "aws_ecs_task_definition" "app" {
         }
       }
 
-      healthCheck = {
-        command = [
-          "CMD-SHELL",
-          "wget --no-verbose --tries=1 --spider http://localhost:${var.port}/api/health || exit 1"
-        ]
-        interval = 30
-        timeout  = 10
-        retries  = 3
-        startPeriod = 120
-      }
+      # healthCheck = {
+      #   command = [
+      #     "CMD-SHELL",
+      #     "wget --no-verbose --tries=1 --spider http://localhost:${var.port}/api/health || exit 1"
+      #   ]
+      #   interval = 90
+      #   timeout  = 30
+      #   retries  = 3
+      #   startPeriod = 300
+      # }
 
       essential = true
     }

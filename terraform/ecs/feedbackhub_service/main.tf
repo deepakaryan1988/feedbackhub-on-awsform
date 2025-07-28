@@ -17,6 +17,8 @@ resource "aws_ecs_service" "app" {
     container_port   = var.container_port
   }
 
+  health_check_grace_period_seconds = 300
+
   tags = var.tags
 }
 

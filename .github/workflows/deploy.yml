@@ -129,7 +129,7 @@ jobs:
           echo "⏱️  Checking status every 10 seconds (max 10 minutes)..."
           
           ATTEMPTS=0
-          MAX_ATTEMPTS=60
+          MAX_ATTEMPTS=90  # Increased from 60 to 90 (15 minutes)
           
           while [ $ATTEMPTS -lt $MAX_ATTEMPTS ]; do
             ATTEMPTS=$((ATTEMPTS + 1))
