@@ -108,12 +108,15 @@ MIT License
 - 🧠 Lifelong learner, exploring the intersection of open-source, DevOps, and AI-driven automation
 
 ### 🏗️ Featured Projects
-- 🚢 **Drupal on AWS with ECS & EFS**  
-  A complete infrastructure-as-code deployment of Drupal 11 using Terraform, Docker, ECS Fargate, RDS, and EFS.
-- 🧱 **Appwrite on AWS**  
-  Backend-as-a-service (BaaS) platform deployed on AWS using ECS Fargate + CI/CD + Secrets Manager + Redis + PostgreSQL.
-- 📝 **FeedbackHub on AWS** _(In Progress)_  
-  Full-stack microservice-ready feedback platform built using Next.js, MongoDB, and AWS DevOps best practices.
+🚢 [**Drupal on AWS with ECS & EFS**](https://github.com/deepakaryan1988/Drupal-AWS)  
+➡️ A complete infrastructure-as-code deployment of Drupal 11 using Terraform, Docker, ECS Fargate, RDS, and EFS.
+
+🧱 [**Appwrite on AWS**](https://github.com/deepakaryan1988/appwrite-on-aws)  
+➡️ Backend-as-a-service (BaaS) platform deployed on AWS using ECS Fargate + CI/CD + Secrets Manager + Redis + PostgreSQL.
+
+📝 [**FeedbackHub on AWS**](https://github.com/deepakaryan1988/feedbackhub-on-awsform) *(In Progress)*  
+➡️ Full-stack microservice-ready feedback platform built using Next.js, MongoDB, and AWS DevOps best practices.
+
 
 ### 🎯 Currently Learning
 - 📦 AWS Lambda, ElastiCache, S3 Static Hosting
@@ -122,9 +125,9 @@ MIT License
 - 🧱 Microservices Deployment Architecture on AWS
 
 ### 📫 Let’s Connect
-- 💼 [LinkedIn](https://www.linkedin.com/in/deepakaryan1988)
-- 🐘 Drupal.org Profile
-- 📚 [Hashnode Blog](https://debugdeploygrow.hashnode.dev/)
+- 💼 [LinkedIn](https://www.linkedin.com/in/deepakaryan1988)  
+- 🐘 [Drupal.org Profile](https://www.drupal.org/u/deepakaryan1988)  
+- 📚 [Hashnode Blog](https://debugdeploygrow.hashnode.dev)  
 - 🐙 [GitHub](https://github.com/deepakaryan1988)
 
 > 🧠 _"Before DevOps was a buzzword, I was already scaling Drupal on EC2s. Now I'm just rewriting it all as Terraform modules!"_
