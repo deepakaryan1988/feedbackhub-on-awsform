@@ -131,3 +131,5 @@ MIT License
 - 🐙 [GitHub](https://github.com/deepakaryan1988)
 
 > 🧠 _"Before DevOps was a buzzword, I was already scaling Drupal on EC2s. Now I'm just rewriting it all as Terraform modules!"_
+## 🚀 CI/CD Pipeline
+This project includes automated deployment via GitHub Actions.
