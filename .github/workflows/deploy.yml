@@ -27,6 +27,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Phase 2.1 Fix: Build Next.js application before Docker build
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Next.js application
+        run: npm run build
+        env:
+          # Add any build-time environment variables if needed
+          NODE_ENV: production
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
