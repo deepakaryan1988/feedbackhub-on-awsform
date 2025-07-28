@@ -1,0 +1,136 @@
+name: Deploy to AWS ECS
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  AWS_REGION: ap-south-1
+  ECR_REPOSITORY: feedbackhub
+  ECS_CLUSTER: feedbackhub-production-cluster
+  ECS_SERVICE: feedbackhub-service
+  ECS_TASK_DEFINITION: feedbackhub-task
+  CONTAINER_NAME: feedbackhub
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          role-session-name: GitHubActions
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Get AWS account ID
+        id: aws-account
+        run: |
+          ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text --no-cli-pager)
+          echo "account_id=$ACCOUNT_ID" >> $GITHUB_OUTPUT
+          echo "AWS Account ID: $ACCOUNT_ID"
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: latest
+        run: |
+          # Build the Docker image
+          docker build -f docker/Dockerfile.prod -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          
+          # Push the image to ECR
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          
+          # Output the image URI for the next step
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          echo "Image pushed: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Download current task definition
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition ${{ env.ECS_TASK_DEFINITION }} \
+            --query taskDefinition \
+            --output json \
+            --no-cli-pager > task-definition.json
+
+      - name: Update task definition with new image
+        id: task-def
+        run: |
+          # Update the image URI in the task definition
+          jq --arg IMAGE "${{ steps.build-image.outputs.image }}" \
+             '.containerDefinitions[0].image = $IMAGE' \
+             task-definition.json > new-task-definition.json
+          
+          # Remove fields that can't be included in register-task-definition
+          jq 'del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .placementConstraints, .compatibilities, .registeredAt, .registeredBy)' \
+             new-task-definition.json > final-task-definition.json
+
+      - name: Register new task definition
+        id: register-task-definition
+        run: |
+          TASK_DEF_ARN=$(aws ecs register-task-definition \
+            --cli-input-json file://final-task-definition.json \
+            --query 'taskDefinition.taskDefinitionArn' \
+            --output text \
+            --no-cli-pager)
+          
+          echo "task_def_arn=$TASK_DEF_ARN" >> $GITHUB_OUTPUT
+          echo "New task definition registered: $TASK_DEF_ARN"
+
+      - name: Update ECS service
+        run: |
+          aws ecs update-service \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --service ${{ env.ECS_SERVICE }} \
+            --task-definition ${{ steps.register-task-definition.outputs.task_def_arn }} \
+            --no-cli-pager
+          
+          echo "ECS service updated successfully"
+
+      - name: Wait for service to stabilize
+        run: |
+          echo "Waiting for ECS service to stabilize..."
+          aws ecs wait services-stable \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --services ${{ env.ECS_SERVICE }} \
+            --no-cli-pager
+          
+          echo "ECS service is now stable"
+
+      - name: Get service status
+        run: |
+          echo "=== Service Status ==="
+          aws ecs describe-services \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --services ${{ env.ECS_SERVICE }} \
+            --query 'services[0].{Status:status,RunningCount:runningCount,DesiredCount:desiredCount,TaskDefinition:taskDefinition}' \
+            --output table \
+            --no-cli-pager
+
+      - name: Deployment Summary
+        run: |
+          echo "🚀 Deployment completed successfully!"
+          echo "📦 Image: ${{ steps.build-image.outputs.image }}"
+          echo "🔧 Task Definition: ${{ steps.register-task-definition.outputs.task_def_arn }}"
+          echo "🌐 Service: ${{ env.ECS_SERVICE }}"
+          echo "📊 Cluster: ${{ env.ECS_CLUSTER }}"
+          echo "🏷️  Tag: latest" 
