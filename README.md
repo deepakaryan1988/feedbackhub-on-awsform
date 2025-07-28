@@ -216,3 +216,38 @@ The app includes:
 ## 📄 License
 
 MIT License
+
+## ⚡ Environment Matrix (Local vs Production)
+
+| Environment | MONGODB_URI value                        | Auth? | How set?         |
+|-------------|------------------------------------------|-------|------------------|
+| Local Dev   | mongodb://mongo:27017/feedbackhub        | No    | .env.local, Compose |
+| Production  | mongodb+srv://user:pass@atlas/feedbackhub| Yes   | AWS Secrets      |
+
+## 🛠️ Local Development Setup (No Auth)
+
+1. **Create `.env.local` in your project root:**
+   ```env
+   MONGODB_URI=mongodb://mongo:27017/feedbackhub
+   PORT=3000
+   NODE_ENV=development
+   ```
+2. **Use Docker Compose for local MongoDB (no auth):**
+   ```bash
+   cd docker
+   docker compose -f docker-compose.dev.yml down -v
+   docker compose -f docker-compose.dev.yml up -d
+   ```
+   This will start MongoDB with no authentication and a clean database.
+3. **Start the app:**
+   ```bash
+   npm run dev
+   # or use the Docker Compose app service for full-stack dev
+   ```
+4. **Access the app:**
+   - [http://localhost:3000](http://localhost:3000)
+
+## 🛡️ Production (AWS/ECS/Atlas)
+- Production uses MongoDB Atlas with authentication.
+- The `MONGODB_URI` is set via AWS Secrets Manager and **never** committed to the repo.
+- No changes needed to production setup if it is already working.
