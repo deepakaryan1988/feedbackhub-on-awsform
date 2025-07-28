@@ -42,7 +42,7 @@ echo ""
 # Build the Docker image
 echo -e "${YELLOW}🔨 Building Docker image...${NC}"
 cd ..
-docker build -t ${REPO_NAME}:${IMAGE_TAG} .
+docker build -f docker/Dockerfile.prod -t ${REPO_NAME}:${IMAGE_TAG} .
 echo -e "${GREEN}✅ Docker image built successfully${NC}"
 echo ""
 

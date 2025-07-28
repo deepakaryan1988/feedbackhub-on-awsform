@@ -17,7 +17,7 @@ NC='\033[0m' # No Color
 echo -e "${YELLOW}Building FeedbackHub Docker image...${NC}"
 
 # Build the Docker image
-docker build -t feedbackhub:${TAG} .
+docker build -f docker/Dockerfile.prod -t feedbackhub:${TAG} .
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}✅ Docker image built successfully!${NC}"
