@@ -122,19 +122,85 @@ jobs:
           
           echo "ECS service updated successfully"
 
-      - name: Wait for service to stabilize
+      # Enhanced ECS Stabilization: Real-time progress monitoring
+      - name: Monitor ECS service stabilization
         run: |
-          echo "Waiting for ECS service to stabilize..."
-          aws ecs wait services-stable \
-            --cluster ${{ env.ECS_CLUSTER }} \
-            --services ${{ env.ECS_SERVICE }} \
-            --no-cli-pager
+          echo "🔄 Starting ECS service stabilization monitoring..."
+          echo "⏱️  Checking status every 10 seconds (max 5 minutes)..."
           
-          echo "ECS service is now stable"
+          ATTEMPTS=0
+          MAX_ATTEMPTS=30
+          
+          while [ $ATTEMPTS -lt $MAX_ATTEMPTS ]; do
+            ATTEMPTS=$((ATTEMPTS + 1))
+            
+            # Get current service status
+            SERVICE_STATUS=$(aws ecs describe-services \
+              --cluster ${{ env.ECS_CLUSTER }} \
+              --services ${{ env.ECS_SERVICE }} \
+              --query 'services[0].{Status:status,RunningCount:runningCount,DesiredCount:desiredCount,RolloutState:deployments[0].rolloutState}' \
+              --output json \
+              --no-cli-pager)
+            
+            # Extract values
+            STATUS=$(echo $SERVICE_STATUS | jq -r '.Status')
+            RUNNING_COUNT=$(echo $SERVICE_STATUS | jq -r '.RunningCount')
+            DESIRED_COUNT=$(echo $SERVICE_STATUS | jq -r '.DesiredCount')
+            ROLLOUT_STATE=$(echo $SERVICE_STATUS | jq -r '.RolloutState')
+            
+            echo "📊 Attempt $ATTEMPTS/$MAX_ATTEMPTS - $(date '+%H:%M:%S')"
+            echo "   Status: $STATUS"
+            echo "   Tasks: $RUNNING_COUNT/$DESIRED_COUNT running"
+            echo "   Rollout: $ROLLOUT_STATE"
+            echo "   ---"
+            
+            # Check if deployment is complete
+            if [ "$ROLLOUT_STATE" = "COMPLETED" ] && [ "$RUNNING_COUNT" -eq "$DESIRED_COUNT" ]; then
+              echo "✅ ECS service stabilization completed successfully!"
+              echo "   All tasks are running and rollout is complete"
+              break
+            fi
+            
+            # Check for failed deployment
+            if [ "$ROLLOUT_STATE" = "FAILED" ]; then
+              echo "❌ ECS service deployment failed!"
+              echo "   Rollout state: $ROLLOUT_STATE"
+              exit 1
+            fi
+            
+            # Wait 10 seconds before next check
+            if [ $ATTEMPTS -lt $MAX_ATTEMPTS ]; then
+              sleep 10
+            fi
+          done
+          
+          # Check if we hit the timeout
+          if [ $ATTEMPTS -eq $MAX_ATTEMPTS ]; then
+            echo "⚠️  Timeout reached after 5 minutes. Checking final status..."
+            FINAL_STATUS=$(aws ecs describe-services \
+              --cluster ${{ env.ECS_CLUSTER }} \
+              --services ${{ env.ECS_SERVICE }} \
+              --query 'services[0].{Status:status,RunningCount:runningCount,DesiredCount:desiredCount,RolloutState:deployments[0].rolloutState}' \
+              --output json \
+              --no-cli-pager)
+            
+            FINAL_ROLLOUT=$(echo $FINAL_STATUS | jq -r '.RolloutState')
+            FINAL_RUNNING=$(echo $FINAL_STATUS | jq -r '.RunningCount')
+            FINAL_DESIRED=$(echo $FINAL_STATUS | jq -r '.DesiredCount')
+            
+            if [ "$FINAL_ROLLOUT" = "COMPLETED" ] && [ "$FINAL_RUNNING" -eq "$FINAL_DESIRED" ]; then
+              echo "✅ Service stabilized successfully (completed during timeout check)"
+            else
+              echo "❌ Service stabilization timeout - final status:"
+              echo "   Rollout: $FINAL_ROLLOUT"
+              echo "   Tasks: $FINAL_RUNNING/$FINAL_DESIRED"
+              exit 1
+            fi
+          fi
 
       - name: Get service status
         run: |
-          echo "=== Service Status ==="
+          echo "=== Final Service Status ==="
           aws ecs describe-services \
             --cluster ${{ env.ECS_CLUSTER }} \
             --services ${{ env.ECS_SERVICE }} \
