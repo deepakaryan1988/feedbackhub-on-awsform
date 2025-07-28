@@ -126,10 +126,10 @@ jobs:
       - name: Monitor ECS service stabilization
         run: |
           echo "🔄 Starting ECS service stabilization monitoring..."
-          echo "⏱️  Checking status every 10 seconds (max 5 minutes)..."
+          echo "⏱️  Checking status every 10 seconds (max 10 minutes)..."
           
           ATTEMPTS=0
-          MAX_ATTEMPTS=30
+          MAX_ATTEMPTS=60
           
           while [ $ATTEMPTS -lt $MAX_ATTEMPTS ]; do
             ATTEMPTS=$((ATTEMPTS + 1))
@@ -158,7 +158,28 @@ jobs:
             if [ "$ROLLOUT_STATE" = "COMPLETED" ] && [ "$RUNNING_COUNT" -eq "$DESIRED_COUNT" ]; then
               echo "✅ ECS service stabilization completed successfully!"
               echo "   All tasks are running and rollout is complete"
-              break
+              
+              # Additional verification: Check if targets are healthy
+              echo "🔍 Verifying target health..."
+              TARGET_HEALTH=$(aws elbv2 describe-target-health \
+                --target-group-arn arn:aws:elasticloadbalancing:ap-south-1:442740305597:targetgroup/feedbackhub-production-tg/faeacc8ba8d40fc0 \
+                --query 'TargetHealthDescriptions[].TargetHealth.State' \
+                --output text \
+                --no-cli-pager)
+              
+              HEALTHY_COUNT=$(echo "$TARGET_HEALTH" | grep -c "healthy" || echo "0")
+              TOTAL_COUNT=$(echo "$TARGET_HEALTH" | wc -w)
+              
+              echo "   Target health: $HEALTHY_COUNT/$TOTAL_COUNT healthy"
+              
+              if [ "$HEALTHY_COUNT" -eq "$TOTAL_COUNT" ] && [ "$TOTAL_COUNT" -gt 0 ]; then
+                echo "✅ All targets are healthy - deployment verified!"
+                break
+              else
+                echo "⚠️  Some targets not healthy yet, continuing to monitor..."
+                sleep 10
+                continue
+              fi
             fi
             
             # Check for failed deployment
@@ -176,7 +197,7 @@ jobs:
           
           # Check if we hit the timeout
           if [ $ATTEMPTS -eq $MAX_ATTEMPTS ]; then
-            echo "⚠️  Timeout reached after 5 minutes. Checking final status..."
+            echo "⚠️  Timeout reached after 10 minutes. Checking final status..."
             FINAL_STATUS=$(aws ecs describe-services \
               --cluster ${{ env.ECS_CLUSTER }} \
               --services ${{ env.ECS_SERVICE }} \
