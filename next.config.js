@@ -3,6 +3,12 @@ const nextConfig = {
   // Use standalone output for production Docker
   ...(process.env.NODE_ENV === 'production' && { output: 'standalone' }),
   
+  // Disable SWC to avoid binary issues in Docker
+  swcMinify: false,
+  experimental: {
+    forceSwcTransforms: false,
+  },
+  
   // Configure for Docker development
   webpack: (config, { dev, isServer }) => {
     // Optimize for development

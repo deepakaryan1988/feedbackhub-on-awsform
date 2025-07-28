@@ -1,7 +1,7 @@
 import { MongoClient, Db } from 'mongodb'
 
 // Get MongoDB URI from environment variables
-const mongoUri = process.env.MONGO_URL || 'mongodb+srv://<USERNAME>:<PASSWORD>@<CLUSTER_URL>/feedbackhub?retryWrites=true&w=majority'
+const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URL || 'mongodb+srv://feedbackhub:Deepakaryan1988@cluster0.is0hvmh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 
 const uri = mongoUri
 const options = {
