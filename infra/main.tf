@@ -65,6 +65,7 @@ module "ecs_task" {
   log_group_name      = module.cloudwatch.log_group_name
   log_group_arn       = module.cloudwatch.log_group_arn
   mongodb_secret_arn  = module.secrets.secret_arn
+  redeployment_trigger = timestamp()
   tags                = local.common_tags
 }
 
@@ -85,6 +86,6 @@ module "ecs_service" {
   desired_count       = var.ecs_desired_count
   min_capacity        = var.ecs_min_capacity
   max_capacity        = var.ecs_max_capacity
-  enable_autoscaling  = var.enable_autoscaling
+  enable_autoscaling  = false
   tags                = local.common_tags
 } 
