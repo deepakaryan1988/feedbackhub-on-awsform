@@ -24,7 +24,7 @@ const getMongoConfig = () => {
   console.log(`🔧 MongoDB Config: NODE_ENV=${nodeEnv}, isDevelopment=${isDevelopment}`)
   
   // Base configuration
-  const clusterHost = 'cluster0.is0hvmh.mongodb.net'
+  const clusterHost = 'your-cluster-hostname.mongodb.net'
   const password = process.env.MONGODB_PASSWORD
   if (!password) {
     throw new Error('MONGODB_PASSWORD environment variable is required')

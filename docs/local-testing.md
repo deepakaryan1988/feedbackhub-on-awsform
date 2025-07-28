@@ -25,7 +25,7 @@ curl http://localhost:3000/api/health
     "environment": "development",
     "database": "feedbackhub_local_db",
     "user": "feedbackhub-local",
-    "cluster": "cluster0.is0hvmh.mongodb.net"
+    "cluster": "your-cluster-hostname.mongodb.net"
   }
 }
 ```
@@ -78,7 +78,7 @@ chmod +x scripts/test-environments.sh
    ✅ Connected to MongoDB Atlas as 'feedbackhub-local' user
    📊 Database: feedbackhub_local_db
    🌍 Environment: development
-   🔗 Cluster: cluster0.is0hvmh.mongodb.net
+   🔗 Cluster: your-cluster-hostname.mongodb.net
    ```
 
 2. **Health Check Response:**

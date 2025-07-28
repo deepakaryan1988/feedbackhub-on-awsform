@@ -129,7 +129,7 @@ Expected response:
     "environment": "development",
     "database": "feedbackhub_local_db",
     "user": "feedbackhub-local",
-    "cluster": "cluster0.is0hvmh.mongodb.net"
+    "cluster": "your-cluster-hostname.mongodb.net"
   }
 }
 ```
