@@ -62,6 +62,12 @@ output "secret_name" {
   value       = module.secrets.secret_name
 }
 
+# GitHub Actions IAM Outputs
+output "github_actions_role_arn" {
+  description = "ARN of the IAM role for GitHub Actions OIDC"
+  value       = module.github_actions_iam.github_actions_role_arn
+}
+
 # Application URL
 output "application_url" {
   description = "URL to access the application"

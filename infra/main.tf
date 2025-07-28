@@ -89,3 +89,10 @@ module "ecs_service" {
   enable_autoscaling  = false
   tags                = local.common_tags
 } 
+
+module "github_actions_iam" {
+  source        = "../terraform/github_actions_iam"
+  aws_region    = var.aws_region
+  project_name  = "feedbackhub"
+  github_repo   = "deepakaryan1988/feedbackhub-on-awsform"
+}

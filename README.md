@@ -114,8 +114,8 @@ MIT License
 🧱 [**Appwrite on AWS**](https://github.com/deepakaryan1988/appwrite-on-aws)  
 ➡️ Backend-as-a-service (BaaS) platform deployed on AWS using ECS Fargate + CI/CD + Secrets Manager + Redis + PostgreSQL.
 
-📝 [**FeedbackHub on AWS**](https://github.com/deepakaryan1988/feedbackhub-on-awsform) *(In Progress)*  
-➡️ Full-stack microservice-ready feedback platform built using Next.js, MongoDB, and AWS DevOps best practices.
+📝 [**FeedbackHub on AWS**](https://github.com/deepakaryan1988/feedbackhub-on-awsform) *(CI/CD Ready)*  
+➡️ Full-stack microservice-ready feedback platform built using Next.js, MongoDB, and AWS DevOps best practices with automated deployment pipeline.
 
 
 ### 🎯 Currently Learning
