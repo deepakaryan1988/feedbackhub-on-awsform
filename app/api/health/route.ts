@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getDb } from '../../lib/mongodb'
+import { getDb, mongoConfig } from '../../lib/mongodb'
 
 export async function GET() {
   try {
@@ -7,23 +7,38 @@ export async function GET() {
     const db = await getDb()
     await db.admin().ping()
     
+    const config = mongoConfig()
+    
     return NextResponse.json({
       status: 'healthy',
       timestamp: new Date().toISOString(),
       service: 'feedbackhub',
       version: '1.0.0',
-      database: 'connected'
+      database: {
+        status: 'connected',
+        environment: config.environment,
+        database: config.database,
+        user: config.username,
+        cluster: config.uri.split('@')[1].split('/')[0]
+      }
     })
   } catch (error) {
     console.error('Health check failed:', error)
+    const config = mongoConfig()
     return NextResponse.json(
       {
         status: 'unhealthy',
         timestamp: new Date().toISOString(),
         service: 'feedbackhub',
         version: '1.0.0',
-        database: 'disconnected',
-        error: 'Database connection failed'
+        database: {
+          status: 'disconnected',
+          environment: config.environment,
+          database: config.database,
+          user: config.username,
+          cluster: config.uri.split('@')[1].split('/')[0],
+          error: error instanceof Error ? error.message : 'Database connection failed'
+        }
       },
       { status: 503 }
     )

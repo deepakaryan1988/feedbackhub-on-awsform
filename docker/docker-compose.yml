@@ -8,10 +8,13 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - MONGO_URL=mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_CLUSTER_URL}/feedbackhub?retryWrites=true&w=majority
+      # Environment-based MongoDB configuration
+      # The app will automatically use the correct user/database based on NODE_ENV
       - NODE_ENV=production
       - PORT=3000
       - NEXT_TELEMETRY_DISABLED=1
+      # Optional: Override with custom MongoDB URI if needed
+      # - MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/database?retryWrites=true&w=majority&appName=Cluster0
     restart: unless-stopped
     networks:
       - feedbackhub-network

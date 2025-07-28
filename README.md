@@ -5,49 +5,31 @@ A modern feedback collection app built with Next.js, MongoDB, and shadcn/ui.
 ## 🎯 Features
 
 - ✅ Real-time feedback submission
-- ✅ MongoDB database integration
+- ✅ **Robust MongoDB connection layer** with environment-based configuration
 - ✅ Modern UI with shadcn/ui components
 - ✅ Toast notifications
 - ✅ Responsive design
 - ✅ Dark mode support
+- ✅ **Health check endpoint** for monitoring
+- ✅ **Comprehensive logging** without exposing sensitive data
 
 ## 🚀 Quick Start
 
-### Option 1: MongoDB Atlas (Recommended)
+### Option 1: Environment-Based MongoDB (Recommended)
 
-1. **Setup MongoDB Atlas:**
+The app now automatically configures MongoDB connections based on `NODE_ENV`:
+
+- **Development** (`NODE_ENV=development`): Uses `feedbackhub-local` user → `feedbackhub_local_db`
+- **Production** (`NODE_ENV=production`): Uses `feedbackhub` user → `DB_name`
+
+1. **Start the app:**
    ```bash
-   ./setup-atlas.sh
+   npm run dev  # Uses development environment
    ```
 
-2. **Update credentials in `.env.local`:**
-   ```env
-   MONGO_URL=mongodb+srv://your-username:your-password@your-cluster.mongodb.net/feedbackhub?retryWrites=true&w=majority
-   ```
-
-3. **Start the app:**
+2. **Test the connection:**
    ```bash
-   npm run dev:atlas
-   ```
-
-4. **Open your browser:**
-   ```
-   http://localhost:3000
-   ```
-
-### Option 2: Docker Compose (Production)
-
-1. **Set environment variables:**
-   ```bash
-   export MONGO_USERNAME=your-username
-   export MONGO_PASSWORD=your-password
-   export MONGO_CLUSTER_URL=your-cluster.mongodb.net
-   ```
-
-2. **Start with Docker:**
-   ```bash
-   cd docker
-   docker-compose up --build
+   curl http://localhost:3000/api/health
    ```
 
 3. **Open your browser:**
@@ -55,13 +37,28 @@ A modern feedback collection app built with Next.js, MongoDB, and shadcn/ui.
    http://localhost:3000
    ```
 
+### Option 2: Docker Compose
+
+1. **Development environment:**
+   ```bash
+   cd docker
+   docker-compose -f docker-compose.dev.yml up --build
+   ```
+
+2. **Production environment:**
+   ```bash
+   cd docker
+   docker-compose up --build
+   ```
+
 ## 🛠️ Tech Stack
 
 - **Frontend:** Next.js 14, React 18, TypeScript
 - **Styling:** Tailwind CSS, shadcn/ui
-- **Database:** MongoDB
+- **Database:** MongoDB Atlas with robust connection layer
 - **Icons:** Lucide React
 - **Animations:** Framer Motion
+- **Deployment:** Docker, ECS Fargate, Terraform
 
 ## 📁 Project Structure
 
@@ -69,11 +66,19 @@ A modern feedback collection app built with Next.js, MongoDB, and shadcn/ui.
 feedbackhub-on-awsform/
 ├── app/                    # Next.js app directory
 │   ├── api/               # API routes
+│   │   ├── health/        # Health check endpoint
+│   │   └── feedback/      # Feedback API
 │   ├── components/        # React components
 │   ├── lib/              # Utilities and database
+│   │   └── mongodb.ts    # Robust MongoDB connection layer
 │   └── types/            # TypeScript types
 ├── docker/               # Docker configuration
-├── lib/                  # Shared utilities
+│   ├── docker-compose.yml      # Production setup
+│   └── docker-compose.dev.yml  # Development setup
+├── scripts/              # Utility scripts
+│   └── test-mongodb-connection.sh
+├── docs/                 # Documentation
+│   └── mongodb-setup.md  # MongoDB connection documentation
 └── components/           # UI components
 ```
 
@@ -81,39 +86,88 @@ feedbackhub-on-awsform/
 
 ### Prerequisites
 - Node.js 20+
-- Docker (for MongoDB)
+- Docker (optional)
 - npm or yarn
 
 ### Environment Variables
-Create a `.env.local` file:
+
+The app uses environment-based configuration. Create a `.env.local` file for custom overrides:
+
 ```env
-MONGO_URL=mongodb+srv://your-username:your-password@your-cluster.mongodb.net/feedbackhub?retryWrites=true&w=majority
+# Optional: Override default MongoDB URI
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/database?retryWrites=true&w=majority&appName=Cluster0
+
+# Optional: Set custom port
+PORT=3000
+
+# Optional: Disable Next.js telemetry
+NEXT_TELEMETRY_DISABLED=1
 ```
 
 ### Available Scripts
-- `npm run dev` - Start development server
-- `npm run dev:atlas` - Start with MongoDB Atlas
+- `npm run dev` - Start development server (uses development environment)
 - `npm run build` - Build for production
 - `npm run start` - Start production server
+- `./scripts/test-mongodb-connection.sh` - Test MongoDB connections
+
+## 🧪 Testing
+
+### Health Check Endpoint
+
+Test the MongoDB connection:
+
+```bash
+curl http://localhost:3000/api/health
+```
+
+Expected response:
+```json
+{
+  "status": "healthy",
+  "database": {
+    "status": "connected",
+    "environment": "development",
+    "database": "feedbackhub_local_db",
+    "user": "feedbackhub-local",
+    "cluster": "cluster0.is0hvmh.mongodb.net"
+  }
+}
+```
+
+### Connection Testing
+
+Test both environments:
+
+```bash
+# Test development environment
+NODE_ENV=development npm run dev
+
+# Test production environment  
+NODE_ENV=production npm run dev
+
+# Run comprehensive tests
+./scripts/test-mongodb-connection.sh
+```
 
 ## 🐳 Docker Commands
 
 ```bash
-# Setup MongoDB Atlas
-./setup-atlas.sh
+# Development environment
+cd docker && docker-compose -f docker-compose.dev.yml up --build
 
-# Start full stack with Docker Compose
+# Production environment
 cd docker && docker-compose up --build
 
 # View logs
-cd docker && docker-compose logs -f
+docker-compose logs -f
 
 # Stop services
-cd docker && docker-compose down
+docker-compose down
 ```
 
 ## 📝 API Endpoints
 
+- `GET /api/health` - Health check with MongoDB status
 - `GET /api/feedback` - Get all feedbacks
 - `POST /api/feedback` - Submit new feedback
 
@@ -139,10 +193,25 @@ interface Feedback {
 ## 🚀 Deployment
 
 The app is ready for deployment to:
+- **AWS ECS Fargate** (recommended)
 - Vercel
 - Netlify
-- AWS ECS
 - Any Node.js hosting platform
+
+### AWS Deployment
+
+The app includes:
+- **Terraform infrastructure** for ECS Fargate
+- **Docker containerization** with multi-stage builds
+- **AWS Secrets Manager** integration for production credentials
+- **Environment-based configuration** for different deployment stages
+
+## 📚 Documentation
+
+- [MongoDB Setup Guide](docs/mongodb-setup.md) - Comprehensive MongoDB connection documentation
+- [Environment Setup](docs/env-setup.md) - Environment configuration guide
+- [Deployment Guide](docs/deployment.md) - AWS deployment instructions
+- [Project Structure](docs/structure.md) - Detailed project organization
 
 ## 📄 License
 

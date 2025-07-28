@@ -8,48 +8,22 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - MONGODB_URI=mongodb://mongo:27017/feedbackhub
+      # Development environment configuration
+      # Uses feedbackhub-local user → feedbackhub_local_db
       - NODE_ENV=development
       - PORT=3000
       - NEXT_TELEMETRY_DISABLED=1
+      # Optional: Override with custom MongoDB URI if needed
+      # - MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/database?retryWrites=true&w=majority&appName=Cluster0
     volumes:
       # Mount source code for hot reloading
       - ../app:/app/app
-      - ../components:/app/components
       - ../lib:/app/lib
-      - ../public:/app/public
       - ../package.json:/app/package.json
       - ../package-lock.json:/app/package-lock.json
-      - ../next.config.js:/app/next.config.js
-      - ../tailwind.config.js:/app/tailwind.config.js
-      - ../tsconfig.json:/app/tsconfig.json
-      - ../components.json:/app/components.json
-      # Exclude node_modules and .next for performance
-      - /app/node_modules
-      - /app/.next
-    depends_on:
-      - mongo
     restart: unless-stopped
     networks:
       - feedbackhub-network
-    command: npm run dev
-
-  mongo:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    environment:
-      - MONGO_INITDB_DATABASE=feedbackhub
-    volumes:
-      - mongo_data:/data/db
-      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-    restart: unless-stopped
-    networks:
-      - feedbackhub-network
-
-volumes:
-  mongo_data:
-    driver: local
 
 networks:
   feedbackhub-network:
