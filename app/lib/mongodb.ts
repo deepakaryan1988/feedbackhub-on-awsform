@@ -23,38 +23,128 @@ const getMongoConfig = () => {
   const isDevelopment = nodeEnv === 'development'
   console.log(`🔧 MongoDB Config: NODE_ENV=${nodeEnv}, isDevelopment=${isDevelopment}`)
   
-  // Base configuration
-  const clusterHost = 'your-cluster-hostname.mongodb.net'
-  const password = process.env.MONGODB_PASSWORD
-  if (!password) {
-    throw new Error('MONGODB_PASSWORD environment variable is required')
-  }
-  const retryWrites = 'true'
-  const writeConcern = 'majority'
-  const appName = 'Cluster0'
-  
-  // Environment-specific configuration
-  const config = isDevelopment 
-    ? {
-        username: 'feedbackhub-local',
-        database: 'feedbackhub_local_db',
-        environment: 'development'
+  // Try multiple connection strategies
+  const connectionStrategies = [
+    // Strategy 1: Full MongoDB Atlas with password
+    () => {
+      const clusterHost = 'your-cluster-hostname.mongodb.net'
+      const password = process.env.MONGODB_PASSWORD
+      if (!password) {
+        throw new Error('MONGODB_PASSWORD not set')
       }
-    : {
-        username: 'feedbackhub',
-        database: 'feedbackhub_prod_db', 
-        environment: 'production'
+      
+      const config = isDevelopment 
+        ? {
+            username: 'feedbackhub-local',
+            database: 'feedbackhub_local_db',
+            environment: 'development'
+          }
+        : {
+            username: 'feedbackhub',
+            database: 'feedbackhub_prod_db', 
+            environment: 'production'
+          }
+      
+      const mongoUri = `mongodb+srv://${config.username}:${password}@${clusterHost}/${config.database}?retryWrites=true&w=majority&appName=Cluster0`
+      
+      return {
+        uri: mongoUri,
+        database: config.database,
+        username: config.username,
+        environment: config.environment,
+        strategy: 'mongodb-atlas'
       }
+    },
+    
+    // Strategy 2: Direct MONGODB_URI from environment
+    () => {
+      const mongoUri = process.env.MONGODB_URI
+      if (!mongoUri) {
+        throw new Error('MONGODB_URI not set')
+      }
+      
+      // Parse URI to extract database name
+      const dbName = mongoUri.split('/').pop()?.split('?')[0] || 'feedbackhub'
+      
+      return {
+        uri: mongoUri,
+        database: dbName,
+        username: 'from-uri',
+        environment: isDevelopment ? 'development' : 'production',
+        strategy: 'direct-uri'
+      }
+    },
+    
+    // Strategy 3: Local MongoDB with Docker
+    () => {
+      const config = isDevelopment 
+        ? {
+            username: 'local',
+            database: 'feedbackhub',
+            environment: 'development'
+          }
+        : {
+            username: 'local',
+            database: 'feedbackhub',
+            environment: 'production'
+          }
+      
+      const mongoUri = 'mongodb://mongo:27017/feedbackhub'
+      
+      return {
+        uri: mongoUri,
+        database: config.database,
+        username: config.username,
+        environment: config.environment,
+        strategy: 'local-docker'
+      }
+    },
+    
+    // Strategy 4: Localhost MongoDB
+    () => {
+      const config = isDevelopment 
+        ? {
+            username: 'local',
+            database: 'feedbackhub',
+            environment: 'development'
+          }
+        : {
+            username: 'local',
+            database: 'feedbackhub',
+            environment: 'production'
+          }
+      
+      const mongoUri = 'mongodb://localhost:27017/feedbackhub'
+      
+      return {
+        uri: mongoUri,
+        database: config.database,
+        username: config.username,
+        environment: config.environment,
+        strategy: 'localhost'
+      }
+    }
+  ]
   
-  // Construct MongoDB URI
-  const mongoUri = `mongodb+srv://${config.username}:${password}@${clusterHost}/${config.database}?retryWrites=${retryWrites}&w=${writeConcern}&appName=${appName}`
-  
-  return {
-    uri: mongoUri,
-    database: config.database,
-    username: config.username,
-    environment: config.environment
+  // Try each strategy until one works
+  for (const strategy of connectionStrategies) {
+    try {
+      const config = strategy()
+      console.log(`🔧 Using connection strategy: ${config.strategy}`)
+      return config
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      console.log(`⚠️  Strategy failed: ${errorMessage}`)
+      continue
+    }
   }
+  
+  // If all strategies fail, provide helpful error message
+  throw new Error(`MongoDB connection failed. Please set up one of the following:
+1. MONGODB_PASSWORD environment variable for MongoDB Atlas
+2. MONGODB_URI environment variable for direct connection
+3. Local MongoDB instance (docker-compose up -d)
+4. Local MongoDB on localhost:27017`)
 }
 
 // Get configuration based on current environment (dynamic)
@@ -90,10 +180,13 @@ if (isBrowser) {
     client = new MongoClient(config.uri, connectionOptions)
     globalWithMongo._mongoClientPromise = client.connect()
       .then(client => {
-        console.log(`✅ Connected to MongoDB Atlas as '${config.username}' user`)
+        console.log(`✅ Connected to MongoDB as '${config.username}' user`)
         console.log(`📊 Database: ${config.database}`)
         console.log(`🌍 Environment: ${config.environment}`)
-        console.log(`🔗 Cluster: ${config.uri.split('@')[1].split('/')[0]}`)
+        console.log(`🔧 Strategy: ${config.strategy}`)
+        if (config.strategy === 'mongodb-atlas') {
+          console.log(`🔗 Cluster: ${config.uri.split('@')[1].split('/')[0]}`)
+        }
         return client
       })
       .catch(error => {
@@ -112,10 +205,13 @@ if (isBrowser) {
   client = new MongoClient(config.uri, connectionOptions)
   clientPromise = client.connect()
     .then(client => {
-      console.log(`✅ Connected to MongoDB Atlas as '${config.username}' user`)
+      console.log(`✅ Connected to MongoDB as '${config.username}' user`)
       console.log(`📊 Database: ${config.database}`)
       console.log(`🌍 Environment: ${config.environment}`)
-      console.log(`🔗 Cluster: ${config.uri.split('@')[1].split('/')[0]}`)
+      console.log(`🔧 Strategy: ${config.strategy}`)
+      if (config.strategy === 'mongodb-atlas') {
+        console.log(`🔗 Cluster: ${config.uri.split('@')[1].split('/')[0]}`)
+      }
       return client
     })
     .catch(error => {

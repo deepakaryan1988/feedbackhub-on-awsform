@@ -1,6 +1,20 @@
 version: '3.8'
 
 services:
+  mongo:
+    image: mongo:7.0
+    container_name: feedbackhub-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=feedbackhub
+    volumes:
+      - mongo_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - feedbackhub-network
+
   app:
     build:
       context: ..
@@ -9,21 +23,26 @@ services:
       - "3000:3000"
     environment:
       # Development environment configuration
-      # Uses feedbackhub-local user → feedbackhub_local_db
+      # Uses local MongoDB connection
       - NODE_ENV=development
       - PORT=3000
       - NEXT_TELEMETRY_DISABLED=1
-      # Optional: Override with custom MongoDB URI if needed
-      # - MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/database?retryWrites=true&w=majority&appName=Cluster0
+      # MongoDB connection for local development
+      - MONGODB_URI=mongodb://mongo:27017/feedbackhub
     volumes:
       # Mount source code for hot reloading
       - ../app:/app/app
       - ../lib:/app/lib
       - ../package.json:/app/package.json
       - ../package-lock.json:/app/package-lock.json
+    depends_on:
+      - mongo
     restart: unless-stopped
     networks:
       - feedbackhub-network
+
+volumes:
+  mongo_data:
 
 networks:
   feedbackhub-network:
