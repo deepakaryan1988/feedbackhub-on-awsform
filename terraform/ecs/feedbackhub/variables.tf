@@ -1,50 +1,51 @@
 variable "container_name" {
-  description = "Name of the container"
+  description = "The name of the container."
   type        = string
 }
 
 variable "ecr_image_url" {
-  description = "ECR image URL for the container"
+  description = "The URL of the ECR image."
   type        = string
 }
 
 variable "port" {
-  description = "Port the container listens on"
+  description = "The port to expose on the container."
   type        = number
-  default     = 3000
 }
 
 variable "cpu" {
-  description = "CPU units for the task (1024 = 1 vCPU)"
+  description = "The CPU units to reserve for the container."
   type        = number
-  default     = 256
 }
 
 variable "memory" {
-  description = "Memory for the task in MiB"
+  description = "The memory to reserve for the container."
   type        = number
-  default     = 512
 }
 
 variable "log_group_name" {
-  description = "Name of the CloudWatch log group"
+  description = "The name of the CloudWatch log group."
   type        = string
 }
 
 variable "log_group_arn" {
-  description = "ARN of the CloudWatch log group"
+  description = "The ARN of the CloudWatch log group."
   type        = string
 }
 
-
-
 variable "mongodb_secret_arn" {
-  description = "ARN of the MongoDB URI secret in Secrets Manager"
+  description = "The ARN of the Secrets Manager secret for the MongoDB URI."
   type        = string
 }
 
 variable "tags" {
-  description = "A map of tags to assign to resources"
+  description = "A map of tags to assign to the resources."
   type        = map(string)
   default     = {}
-} 
+}
+
+variable "redeployment_trigger" {
+  description = "A value that, when changed, triggers a redeployment of the ECS service."
+  type        = string
+  default     = ""
+}

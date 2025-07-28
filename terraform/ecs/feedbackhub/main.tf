@@ -117,23 +117,21 @@ resource "aws_ecs_task_definition" "app" {
 
       environment = [
         {
-          name  = "NODE_ENV"
+          name  = "NODE_ENV",
           value = "production"
         },
         {
-          name  = "PORT"
+          name  = "PORT",
           value = tostring(var.port)
         }
-      ]
-
-      secrets = [
-        {
-          name      = "MONGODB_URI"
-          valueFrom = var.mongodb_secret_arn
-        }
-      ]
-
-      logConfiguration = {
+      ],
+    secrets = [
+      {
+        name      = "MONGODB_URI"
+        valueFrom = var.mongodb_secret_arn
+      }
+    ],
+    logConfiguration = {
         logDriver = "awslogs"
         options = {
           awslogs-group         = var.log_group_name
