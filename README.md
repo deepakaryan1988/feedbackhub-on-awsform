@@ -1,8 +1,16 @@
 # FeedbackHub-on-AWSform
 
+> **FeedbackHub is a production-ready, cloud-native feedback microservice. Built to teach (and learn) modern, secure, cloud DevOps from code to dashboards.**
+
+[![CI/CD Status](https://github.com/deepakaryan1988/feedbackhub-on-awsform/actions/workflows/deploy.yml/badge.svg)](https://github.com/deepakaryan1988/feedbackhub-on-awsform/actions/workflows/deploy.yml)
+
 **FeedbackHub** is a fullstack Next.js app using MongoDB Atlas. It supports both:
 - 🧪 Local development (connects directly to MongoDB Atlas via `feedbackhub‑local` user)
 - ☁️ AWS production deployment on ECS (via `feedbackhub` user), with Terraform and AWS Secrets Manager
+
+## 🏗️ Architecture
+
+📊 **[View Architecture Diagram](docs/architecture.md)** - Complete system overview with Mermaid diagram
 
 ---
 
@@ -33,7 +41,7 @@ npm run dev  # runs on http://localhost:3000
 cd infra/
 terraform init
 terraform plan
-terraform apply
+terraform apply -auto-approve
 ```
 
 - Ensure AWS Secrets Manager contains:
@@ -49,12 +57,12 @@ terraform apply
 - **DNS:** Visit the ECS service / Load Balancer URL in browser
 - **Health check endpoint:**
   ```bash
-  GET /api/db-health
+  GET /api/health
   # should return status 200 if DB is connected
   ```
 - **Logs:**
   ```bash
-  aws logs tail /ecs/feedbackhub --since 1h --follow --region ap-south-1
+  aws logs tail /ecs/feedbackhub --since 1h --follow --region ap-south-1 --no-cli-pager
   ```
   Look for:
   - `Connected to MongoDB as feedbackhub`
@@ -78,6 +86,49 @@ terraform apply
 | UI outdated in production    | Force ECS redeploy or verify image version    |
 | Feedbacks not showing        | Check CloudWatch logs for MongoDB errors      |
 | Form submission fails        | Verify API route logs for runtime/validation  |
+
+---
+
+## 🎯 What's Next (Roadmap)
+
+### 🚀 Planned Features
+- **ECS Blue/Green Deployment**: Zero-downtime deployments with automatic rollback
+- **S3 Pre-signed Upload Support**: Direct file uploads to S3 with security
+- **Observability Dashboard**: Centralized monitoring with CloudWatch dashboards
+- **Multi-region Deployment**: Global distribution for better performance
+- **API Rate Limiting**: Protect against abuse with intelligent throttling
+
+### 🔧 Infrastructure Improvements
+- **Auto-scaling Policies**: Dynamic scaling based on CPU/memory usage
+- **CDN Integration**: CloudFront for static asset delivery
+- **Database Read Replicas**: Improved read performance
+- **Backup & Recovery**: Automated database backups and disaster recovery
+
+### 📊 Monitoring & Analytics
+- **Custom Metrics**: Application-specific CloudWatch metrics
+- **Alerting**: Proactive notifications for issues
+- **Performance Monitoring**: Response time and throughput tracking
+- **User Analytics**: Usage patterns and feedback insights
+
+---
+
+## 💡 Lessons Learned
+
+### Real-world DevOps Challenges
+
+**Handling ECS container health checks for Next.js required customizing the pipeline and task definition. See [Health Check Documentation](docs/health.md) for detailed lessons learned.**
+
+Key insights from production deployment:
+- **Health Check Design**: Next.js apps need specialized health check endpoints
+- **Startup Time Management**: Container health checks must account for Next.js startup delays
+- **Database Resilience**: Health checks should gracefully handle temporary DB outages
+- **Monitoring Integration**: Comprehensive logging and metrics are essential for troubleshooting
+
+### Production Hardening
+- **Security**: Implemented least-privilege IAM roles and network security
+- **Reliability**: Multiple health check layers and graceful degradation
+- **Observability**: Centralized logging with CloudWatch and structured error handling
+- **Scalability**: Designed for horizontal scaling with load balancer integration
 
 ---
 
@@ -124,12 +175,13 @@ MIT License
 - 🧠 Claude CLI, Cursor IDE, and AI-native DevOps workflows
 - 🧱 Microservices Deployment Architecture on AWS
 
-### 📫 Let’s Connect
+### 📫 Let's Connect
 - 💼 [LinkedIn](https://www.linkedin.com/in/deepakaryan1988)  
 - 🐘 [Drupal.org Profile](https://www.drupal.org/u/deepakaryan1988)  
 - 📚 [Hashnode Blog](https://debugdeploygrow.hashnode.dev)  
 - 🐙 [GitHub](https://github.com/deepakaryan1988)
 
 > 🧠 _"Before DevOps was a buzzword, I was already scaling Drupal on EC2s. Now I'm just rewriting it all as Terraform modules!"_
+
 ## 🚀 CI/CD Pipeline
 This project includes automated deployment via GitHub Actions.
