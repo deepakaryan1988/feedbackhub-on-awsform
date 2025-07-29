@@ -1,8 +1,8 @@
+![CI/CD](https://github.com/deepakaryan1988/feedbackhub-on-awsform/actions/workflows/deploy.yml/badge.svg)
+
 # FeedbackHub-on-AWSform
 
 > **FeedbackHub is a production-ready, cloud-native feedback microservice. Built to teach (and learn) modern, secure, cloud DevOps from code to dashboards.**
-
-[![CI/CD Status](https://github.com/deepakaryan1988/feedbackhub-on-awsform/actions/workflows/deploy.yml/badge.svg)](https://github.com/deepakaryan1988/feedbackhub-on-awsform/actions/workflows/deploy.yml)
 
 **FeedbackHub** is a fullstack Next.js app using MongoDB Atlas. It supports both:
 - 🧪 Local development (connects directly to MongoDB Atlas via `feedbackhub‑local` user)
