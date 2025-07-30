@@ -10,8 +10,13 @@ output "ecs_cluster_name" {
 }
 
 output "ecs_service_name" {
-  description = "Name of the ECS service"
+  description = "Name of the ECS service (Blue)"
   value       = module.ecs_service.service_name
+}
+
+output "ecs_green_service_name" {
+  description = "Name of the ECS service (Green)"
+  value       = module.ecs_service_green.green_service_name
 }
 
 output "ecs_task_definition_arn" {

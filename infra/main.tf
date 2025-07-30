@@ -50,6 +50,8 @@ module "alb" {
   vpc_id      = var.vpc_id
   subnet_ids  = var.public_subnet_ids
   target_port = var.app_port
+  project_name = var.app_name
+  environment  = var.environment
   tags        = local.common_tags
 }
 
@@ -69,7 +71,7 @@ module "ecs_task" {
   tags                = local.common_tags
 }
 
-# ECS Service
+# ECS Service (Blue)
 module "ecs_service" {
   source = "../terraform/ecs/feedbackhub_service"
 
@@ -88,7 +90,21 @@ module "ecs_service" {
   max_capacity        = var.ecs_max_capacity
   enable_autoscaling  = false
   tags                = local.common_tags
-} 
+}
+
+# ECS Service (Green)
+module "ecs_service_green" {
+  source = "../terraform/ecs/feedbackhub_service_green"
+
+  project_name         = var.app_name
+  ecs_cluster_id       = module.ecs_cluster.cluster_id
+  task_definition_arn  = module.ecs_task.task_definition_arn
+  subnet_ids           = var.public_subnet_ids
+  security_group_id    = module.alb.ecs_tasks_security_group_id
+  green_target_group_arn = module.alb.feedbackhub_green_tg_arn
+  container_name       = var.app_name
+  container_port       = var.app_port
+}
 
 module "github_actions_iam" {
   source        = "../terraform/github_actions_iam"

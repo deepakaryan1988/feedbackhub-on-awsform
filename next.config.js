@@ -21,6 +21,27 @@ const nextConfig = {
     return config
   },
   
+  // Internal rewrites for Green environment
+  async rewrites() {
+    return [
+      {
+        source: '/green',
+        destination: '/', // Handle /green without trailing slash
+      },
+      {
+        source: '/green/',
+        destination: '/', // Handle /green/ with trailing slash
+      },
+      {
+        source: '/green/:path*',
+        destination: '/:path*', // Handle /green/anything
+      },
+    ];
+  },
+  
+  // Disable automatic trailing slash redirects
+  trailingSlash: false,
+  
   async headers() {
     return [
       {
