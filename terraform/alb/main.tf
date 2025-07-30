@@ -1,4 +1,6 @@
+# -------------------------
 # Security Group for ALB
+# -------------------------
 resource "aws_security_group" "alb" {
   name_prefix = "${var.name_prefix}-alb-"
   vpc_id      = var.vpc_id
@@ -29,7 +31,9 @@ resource "aws_security_group" "alb" {
   })
 }
 
+# -------------------------
 # Application Load Balancer
+# -------------------------
 resource "aws_lb" "main" {
   name               = "${var.name_prefix}-alb"
   internal           = false
@@ -44,7 +48,9 @@ resource "aws_lb" "main" {
   })
 }
 
-# Target Group
+# -------------------------
+# Blue Target Group (Existing)
+# -------------------------
 resource "aws_lb_target_group" "app" {
   name        = "${var.name_prefix}-tg"
   port        = var.target_port
@@ -69,7 +75,9 @@ resource "aws_lb_target_group" "app" {
   })
 }
 
+# -------------------------
 # ALB Listener
+# -------------------------
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.main.arn
   port              = "80"
@@ -83,7 +91,9 @@ resource "aws_lb_listener" "http" {
   tags = var.tags
 }
 
+# -------------------------
 # Security Group for ECS tasks
+# -------------------------
 resource "aws_security_group" "ecs_tasks" {
   name_prefix = "${var.name_prefix}-ecs-tasks-"
   vpc_id      = var.vpc_id
@@ -105,4 +115,84 @@ resource "aws_security_group" "ecs_tasks" {
   tags = merge(var.tags, {
     Name = "${var.name_prefix}-ecs-tasks-sg"
   })
-} 
+}
+
+# -------------------------
+# Green Target Group (For Blue/Green deployment)
+# -------------------------
+resource "aws_lb_target_group" "feedbackhub_green_tg" {
+  name        = "${var.project_name}-green-tg"
+  port        = 3000
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
+  target_type = "ip"
+
+  health_check {
+    path                = "/"
+    protocol            = "HTTP"
+    matcher             = "200-399"
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+  }
+
+  tags = {
+    Environment = var.environment
+    Service     = "feedbackhub-green"
+  }
+}
+
+# -------------------------
+# Path-based routing for Green Testing
+# -------------------------
+# Note: ALB listener rules don't support internal path rewriting.
+# This rule forwards /green/* requests to the Green Target Group.
+# The application should handle path rewriting internally by:
+# 1. Detecting requests with /green/ prefix
+# 2. Rewriting the path to / internally
+# 3. Serving the appropriate content
+resource "aws_lb_listener_rule" "feedbackhub_green_rule" {
+  listener_arn = aws_lb_listener.http.arn
+  priority     = 100
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.feedbackhub_green_tg.arn
+  }
+
+  condition {
+    path_pattern {
+      values = ["/green/*"]
+    }
+  }
+}
+
+# -------------------------
+# Weighted routing for Gradual Rollout (Optional)
+# -------------------------
+resource "aws_lb_listener_rule" "feedbackhub_weighted_rule" {
+  listener_arn = aws_lb_listener.http.arn
+  priority     = 110
+
+  action {
+    type = "forward"
+
+    forward {
+      target_group {
+        arn    = aws_lb_target_group.app.arn
+        weight = 90
+      }
+      target_group {
+        arn    = aws_lb_target_group.feedbackhub_green_tg.arn
+        weight = 10
+      }
+    }
+  }
+
+  condition {
+    path_pattern {
+      values = ["/*"]
+    }
+  }
+}
