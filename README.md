@@ -2,6 +2,8 @@
 
 # FeedbackHub-on-AWSform
 
+> 💼 **Recruiter Note:** This project is a production-grade DevOps showcase integrating Terraform, ECS Fargate, AI (Bedrock Claude), Lambda, and CI/CD. It demonstrates my ability to design and deploy modern cloud architectures, optimize operations, and implement AI-powered observability pipelines.
+
 > **FeedbackHub is a production-ready, cloud-native feedback microservice. Built to teach (and learn) modern, secure, cloud DevOps from code to dashboards.**
 
 **FeedbackHub** is a fullstack Next.js app using MongoDB Atlas. It supports both:
@@ -11,6 +13,79 @@
 ## 🏗️ Architecture
 
 📊 **[View Architecture Diagram](docs/architecture.md)** - Complete system overview with Mermaid diagram
+
+---
+
+## 🚀 Phase 3: AWS Bedrock Log Summarizer Integration
+
+FeedbackHub now integrates **AWS Bedrock (Claude model)** to automatically summarize ECS logs and store summaries in S3 for quick debugging and analytics.
+
+**Architecture:**
+- ECS Logs → CloudWatch → Lambda Trigger
+- Lambda calls AWS Bedrock → Generates summary
+- Summary stored in S3 (`feedbackhub-log-summaries` bucket)
+
+**Proof of Implementation:**
+Screenshots from AWS Console and CLI confirming successful integration:
+
+![AWS Bedrock Successfully Integrated](docs/screenshots/AWS-Bedrock-successfully-integrated.png)
+![AWS Bedrock Web Proof](docs/screenshots/AWS-Bedrock-web-proof.png)
+
+**Interview Prep Highlights:**
+- Demonstrates AI-powered observability to reduce MTTR
+- Shows serverless + Bedrock integration with ECS Fargate
+- Fully managed via Terraform for scalability
+
+---
+
+## 🏗️ System Architecture
+
+```mermaid
+graph TD
+    subgraph "Frontend"
+        UI[Next.js UI]
+    end
+    
+    subgraph "Backend"
+        API[Next.js API Routes]
+        DB[(MongoDB Atlas)]
+    end
+    
+    subgraph "AWS Infrastructure"
+        ALB[Application Load Balancer]
+        ECS[ECS Fargate Cluster]
+        CW[CloudWatch Logs]
+        LAMBDA[Lambda Bedrock Summarizer]
+        BEDROCK[AWS Bedrock Claude]
+        S3[S3 Summary Storage]
+        SECRETS[AWS Secrets Manager]
+    end
+    
+    subgraph "CI/CD"
+        GH[GitHub Actions]
+        ECR[ECR Repository]
+    end
+    
+    UI --> ALB
+    ALB --> ECS
+    ECS --> API
+    API --> DB
+    ECS --> CW
+    CW --> LAMBDA
+    LAMBDA --> BEDROCK
+    BEDROCK --> LAMBDA
+    LAMBDA --> S3
+    ECS --> SECRETS
+    GH --> ECR
+    ECR --> ECS
+```
+
+**Key Components:**
+- **ECS Fargate**: Serverless container orchestration
+- **AWS Bedrock**: AI-powered log summarization
+- **Lambda**: Serverless event processing
+- **Terraform**: Infrastructure as Code
+- **GitHub Actions**: Automated CI/CD pipeline
 
 ---
 
