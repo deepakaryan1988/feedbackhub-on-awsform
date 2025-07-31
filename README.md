@@ -13,6 +13,14 @@
 - 🚀 **Zero-Downtime Deployments**: Blue/Green deployment architecture
 - 📊 **Comprehensive Monitoring**: CloudWatch integration with custom metrics
 
+## 📖 Phase 3 Deep Dive (Hashnode Article)
+
+For a complete breakdown of Phase 3 (AWS Bedrock AI-powered Observability) including architecture diagrams, screenshots, and implementation details:
+
+🔗 **[Read the full Hashnode article here](https://debugdeploygrow.hashnode.dev/phase-3-ai-powered-observability-in-feedbackhub-with-aws-bedrock)**
+
+---
+
 ## 🏗️ System Architecture
 
 ```mermaid
