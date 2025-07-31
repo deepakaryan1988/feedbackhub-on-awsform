@@ -120,6 +120,49 @@ variable "memory_threshold" {
   default     = 80
 }
 
+# Bedrock Log Summarizer Configuration
+variable "bedrock_summarizer_enabled" {
+  description = "Enable the Bedrock log summarizer (default: false to control costs)"
+  type        = bool
+  default     = false
+}
+
+variable "bedrock_model_id" {
+  description = "Bedrock model ID to use for summarization"
+  type        = string
+  default     = "anthropic.claude-sonnet-4-20250514-v1:0"
+}
+
+variable "bedrock_lambda_timeout" {
+  description = "Lambda function timeout in seconds for Bedrock summarizer"
+  type        = number
+  default     = 300
+}
+
+variable "bedrock_lambda_memory_size" {
+  description = "Lambda function memory size in MB for Bedrock summarizer"
+  type        = number
+  default     = 512
+}
+
+variable "bedrock_max_log_length" {
+  description = "Maximum length of logs to process in characters for summarization"
+  type        = number
+  default     = 10000
+}
+
+variable "bedrock_summary_interval" {
+  description = "Interval in minutes to generate summaries"
+  type        = number
+  default     = 60
+}
+
+variable "bedrock_filter_pattern" {
+  description = "CloudWatch log filter pattern for summarization"
+  type        = string
+  default     = ""
+}
+
 # Tags
 variable "tags" {
   description = "Additional tags to apply to all resources"

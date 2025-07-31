@@ -106,9 +106,65 @@ module "ecs_service_green" {
   container_port       = var.app_port
 }
 
+# S3 Bucket for Lambda code and log summaries
+resource "aws_s3_bucket" "lambda_and_summaries" {
+  bucket = "${local.name_prefix}-lambda-summaries"
+
+  tags = local.common_tags
+}
+
+# S3 Bucket Versioning
+resource "aws_s3_bucket_versioning" "lambda_and_summaries" {
+  bucket = aws_s3_bucket.lambda_and_summaries.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+# S3 Bucket Server Side Encryption
+resource "aws_s3_bucket_server_side_encryption_configuration" "lambda_and_summaries" {
+  bucket = aws_s3_bucket.lambda_and_summaries.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
+# S3 Bucket Public Access Block
+resource "aws_s3_bucket_public_access_block" "lambda_and_summaries" {
+  bucket = aws_s3_bucket.lambda_and_summaries.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 module "github_actions_iam" {
   source        = "../terraform/github_actions_iam"
   aws_region    = var.aws_region
   project_name  = "feedbackhub"
   github_repo   = "deepakaryan1988/feedbackhub-on-awsform"
+}
+
+# Bedrock Log Summarizer Module
+module "bedrock_log_summarizer" {
+  source = "../terraform/bedrock-log-summarizer"
+
+  name_prefix        = local.name_prefix
+  summarizer_enabled = var.bedrock_summarizer_enabled
+  model_id           = var.bedrock_model_id
+  log_group_name     = module.cloudwatch.log_group_name
+  log_group_arn      = module.cloudwatch.log_group_arn
+  s3_bucket_name     = aws_s3_bucket.lambda_and_summaries.bucket
+  s3_bucket_arn      = aws_s3_bucket.lambda_and_summaries.arn
+  lambda_timeout     = var.bedrock_lambda_timeout
+  lambda_memory_size = var.bedrock_lambda_memory_size
+  max_log_length     = var.bedrock_max_log_length
+  summary_interval   = var.bedrock_summary_interval
+  filter_pattern     = var.bedrock_filter_pattern
+  log_retention_days = var.log_retention_days
+  tags               = local.common_tags
 }

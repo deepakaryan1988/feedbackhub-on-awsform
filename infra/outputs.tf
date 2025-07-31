@@ -73,6 +73,43 @@ output "github_actions_role_arn" {
   value       = module.github_actions_iam.github_actions_role_arn
 }
 
+# S3 Bucket Outputs
+output "lambda_summaries_bucket_name" {
+  description = "Name of the S3 bucket for Lambda code and summaries"
+  value       = aws_s3_bucket.lambda_and_summaries.bucket
+}
+
+output "lambda_summaries_bucket_arn" {
+  description = "ARN of the S3 bucket for Lambda code and summaries"
+  value       = aws_s3_bucket.lambda_and_summaries.arn
+}
+
+# Bedrock Log Summarizer Outputs
+output "bedrock_lambda_function_arn" {
+  description = "ARN of the Bedrock log summarizer Lambda function"
+  value       = module.bedrock_log_summarizer.lambda_function_arn
+}
+
+output "bedrock_lambda_function_name" {
+  description = "Name of the Bedrock log summarizer Lambda function"
+  value       = module.bedrock_log_summarizer.lambda_function_name
+}
+
+output "bedrock_lambda_role_arn" {
+  description = "ARN of the Bedrock log summarizer Lambda IAM role"
+  value       = module.bedrock_log_summarizer.lambda_role_arn
+}
+
+output "bedrock_lambda_log_group_name" {
+  description = "Name of the Bedrock log summarizer Lambda CloudWatch log group"
+  value       = module.bedrock_log_summarizer.lambda_log_group_name
+}
+
+output "bedrock_subscription_filter_name" {
+  description = "Name of the CloudWatch subscription filter for log summarization"
+  value       = module.bedrock_log_summarizer.subscription_filter_name
+}
+
 # Application URL
 output "application_url" {
   description = "URL to access the application"
