@@ -33,19 +33,19 @@
 ---
 
 ## 🏗️ Modern Cloud Architecture
-<details>
 <summary>System Architecture (Mermaid)</summary>
 
 ```mermaid
 graph TD
-    subgraph "User"
-        BROWSER[Web Browser]
-    end
-    subgraph "AWS"
+    %% User
+    BROWSER[Web Browser]
+
+    %% AWS
+    subgraph AWS
         ALB[Application Load Balancer]
         ECS_CLUSTER[ECS Fargate Cluster]
-        ECS_BLUE[ECS Service (Blue)]
-        ECS_GREEN[ECS Service (Green)]
+        ECS_BLUE[ECS Service Blue]
+        ECS_GREEN[ECS Service Green]
         TASK[Next.js App Container]
         CW[CloudWatch Logs]
         LAMBDA[Lambda: Bedrock Log Summarizer]
@@ -53,11 +53,15 @@ graph TD
         S3[S3: Log Summaries]
         SECRETS[AWS Secrets Manager]
     end
-    subgraph "CI/CD"
+
+    %% CI/CD
+    subgraph CICD
         GHA[GitHub Actions]
         ECR[ECR Repository]
     end
-    subgraph "Database"
+
+    %% Database
+    subgraph Database
         MDB[(MongoDB Atlas)]
     end
 
@@ -77,7 +81,6 @@ graph TD
     GHA --> ECR
     ECR --> ECS_CLUSTER
 ```
-</details>
 
 ---
 
