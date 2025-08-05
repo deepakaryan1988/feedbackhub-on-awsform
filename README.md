@@ -271,7 +271,6 @@ terraform apply -auto-approve
 [**Deepak Kumar**](https://github.com/deepakaryan1988) — Senior DevOps Engineer & Cloud Architect  
 - [LinkedIn](https://www.linkedin.com/in/deepakaryan1988)
 - [Technical Blog](https://debugdeploygrow.hashnode.dev)
-- [GitHub Portfolio](https://github.com/deepakaryan1988)
 
 ---
 
