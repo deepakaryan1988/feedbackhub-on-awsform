@@ -115,6 +115,15 @@ module "ecs_service_alarms" {
   tags                     = local.common_tags
 }
 
+# SNS Email Subscriptions for Alarms
+module "sns_subscriptions" {
+  source = "../terraform/monitoring/sns_subscriptions"
+  
+  sns_topic_arn = module.ecs_service_alarms.sns_topic_arn
+  email_addresses = var.notification_emails
+  tags = local.common_tags
+}
+
 # ECS Service (Green)
 module "ecs_service_green" {
   source = "../terraform/ecs/feedbackhub_service_green"
