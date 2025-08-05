@@ -126,15 +126,11 @@ terraform apply -auto-approve
 
 ## 🗺️ Roadmap
 
-- Multi-region deployment (CloudFront CDN)
-- Advanced auto-scaling (CPU/memory policies)
-- API Gateway integration (rate limiting)
-- Redis caching (ElastiCache)
-- S3 pre-signed uploads
-- Automated DB backups & DR
-- Custom CloudWatch dashboards & alerting
-- Distributed tracing & user analytics
-- Cost optimization & resource monitoring
+- **Phase 2.1** – Blue/Green Deployments – ✅ Completed
+- **Phase 3** – Bedrock AI Observability (Claude summarizer for ECS logs) – ✅ Completed
+- **Phase 4** – Advanced DevOps Add-ons (multi-region readiness, CDN, auto-scaling tuning) – 🚧 In Progress
+- **Phase 5.2** – RAG Integration (Claude/Gemini + vector DB for feedback search) – ⏳ Planned
+- **Phase 6** – Optimization & AI Analytics (cost optimization, DR, user analytics, deep observability dashboards) – ⏳ Planned
 
 ---
 
