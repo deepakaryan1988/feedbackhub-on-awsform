@@ -217,13 +217,20 @@ terraform apply -auto-approve
 
 ---
 
+
 ## 🗺️ Roadmap
 
-- **Phase 2.1** – Blue/Green Deployments – ✅ Completed
-- **Phase 3** – Bedrock AI Observability (Claude summarizer for ECS logs) – ✅ Completed
-- **Phase 4** – Advanced DevOps Add-ons (multi-region readiness, CDN, auto-scaling tuning) – 🚧 In Progress
-- **Phase 5.2** – RAG Integration (Claude/Gemini + vector DB for feedback search) – ⏳ Planned
-- **Phase 6** – Optimization & AI Analytics (cost optimization, DR, user analytics, deep observability dashboards) – ⏳ Planned
+| Phase         | Feature/Focus Area                              | Status         | Highlights                                                                                          |
+| ------------- | ----------------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------- |
+| **Phase 1**   | Core Infrastructure Setup                       | ✅ Completed    | VPC, subnets, security groups, IAM roles, Secrets Manager, modular Terraform baseline               |
+| **Phase 1.5** | ECS Cluster & Service Bootstrapping             | ✅ Completed    | ECS Fargate cluster, ECR repo, basic service deployment (Next.js app + MongoDB Atlas integration)   |
+| **Phase 2**   | CI/CD Pipeline (GitHub Actions)                 | ✅ Completed    | Automated build, test, and deploy pipeline to ECS; secure secret injection from AWS Secrets Manager |
+| **Phase 2.1** | Blue/Green Deployments                          | ✅ Completed    | Zero-downtime ECS deployments with ALB traffic shifting and rollback readiness                      |
+| **Phase 3**   | AI Observability (AWS Bedrock)                  | ✅ Completed    | Claude model summarizes ECS logs via Lambda; outputs to S3 for review                               |
+| **Phase 3.1** | CloudWatch Monitoring + Auto Scaling            | ✅ Completed    | ECS service autoscaling (1→5 tasks) triggered by CPU metrics; SNS alerts configured                 |
+| **Phase 4**   | Advanced DevOps Add-ons                         | 🚧 In Progress | Multi-region readiness, CDN via CloudFront, further IAM hardening, enhanced CI/CD workflows         |
+| **Phase 5.2** | RAG Feedback Search (Claude/Gemini + Vector DB) | ⏳ Planned      | AI-powered semantic search of feedback data                                                         |
+| **Phase 6**   | Optimization & AI Analytics                     | ⏳ Planned      | Cost optimization, disaster recovery, advanced observability dashboards, AI-driven insights         |
 
 ---
 
