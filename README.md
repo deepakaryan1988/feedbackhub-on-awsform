@@ -152,7 +152,7 @@ terraform apply -auto-approve
 ---
 
 ## � Author & Contact
-
+## 👤 Author & Contact
 [**Deepak Kumar**](https://github.com/deepakaryan1988) — Senior DevOps Engineer & Cloud Architect
 
 - [LinkedIn](https://www.linkedin.com/in/deepakaryan1988)
