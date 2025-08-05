@@ -99,33 +99,34 @@ graph TD
 
 ### 🔥 Real-World Load Testing & Autoscaling
 
-**Load Testing with 50,000 Requests**
-![Load Testing with Hey Tool](docs/screenshots/Scalling-Monitoring-SNS/hey-command.png)
-*Executing intensive load testing with 200 concurrent connections to validate autoscaling behavior*
 
-**ECS Service Scaling in Action**
-![ECS Autoscaling Dashboard](docs/screenshots/Scalling-Monitoring-SNS/autoscalling.png)
-*ECS service automatically scaling from 1 to 5 tasks under high CPU load (99% utilization)*
+**Load Testing with 50,000 Requests**<br>
+<img src="docs/screenshots/Scalling-Monitoring-SNS/hey-command.png" alt="Load Testing with Hey Tool" width="500"/>
+<br><em>Executing intensive load testing with 200 concurrent connections to validate autoscaling behavior</em>
+
+**ECS Service Scaling in Action**<br>
+<img src="docs/screenshots/Scalling-Monitoring-SNS/autoscalling.png" alt="ECS Autoscaling Dashboard" width="500"/>
+<br><em>ECS service automatically scaling from 1 to 5 tasks under high CPU load (99% utilization)</em>
 
 ### 📊 CloudWatch Monitoring Excellence
 
-**High CPU Utilization Alert**
-![CloudWatch CPU High Alarm](docs/screenshots/Scalling-Monitoring-SNS/CPU-High-Traffic.png)
-*CloudWatch alarm triggered at 10% CPU threshold during load testing (peaked at 99% utilization)*
+**High CPU Utilization Alert**<br>
+<img src="docs/screenshots/Scalling-Monitoring-SNS/CPU-High-Traffic.png" alt="CloudWatch CPU High Alarm" width="500"/>
+<br><em>CloudWatch alarm triggered at 10% CPU threshold during load testing (peaked at 99% utilization)</em>
 
-**Normal CPU Utilization State**
-![CloudWatch CPU Normal State](docs/screenshots/Scalling-Monitoring-SNS/CPU-low-traffic.png)
-*System returning to normal state after load testing with proper scaling behavior*
+**Normal CPU Utilization State**<br>
+<img src="docs/screenshots/Scalling-Monitoring-SNS/CPU-low-traffic.png" alt="CloudWatch CPU Normal State" width="500"/>
+<br><em>System returning to normal state after load testing with proper scaling behavior</em>
 
 ### 🤖 AWS Bedrock AI Integration
 
-**AWS Bedrock Successfully Integrated**
-![AWS Bedrock Integration Success](docs/screenshots/AWS-Bedrock/AWS-Bedrock-successfully-integrated.png)
-*AWS Bedrock Claude AI model successfully processing ECS logs for intelligent summarization*
+**AWS Bedrock Successfully Integrated**<br>
+<img src="docs/screenshots/AWS-Bedrock/AWS-Bedrock-successfully-integrated.png" alt="AWS Bedrock Integration Success" width="500"/>
+<br><em>AWS Bedrock Claude AI model successfully processing ECS logs for intelligent summarization</em>
 
-**Web-Based Bedrock Proof**
-![AWS Bedrock Web Interface](docs/screenshots/AWS-Bedrock/AWS-Bedrock-web-proof.png)
-*Web interface demonstrating AWS Bedrock AI-powered log summarization in action*
+**Web-Based Bedrock Proof**<br>
+<img src="docs/screenshots/AWS-Bedrock/AWS-Bedrock-web-proof.png" alt="AWS Bedrock Web Interface" width="500"/>
+<br><em>Web interface demonstrating AWS Bedrock AI-powered log summarization in action</em>
 
 ### 🎯 Key Achievements Demonstrated
 
