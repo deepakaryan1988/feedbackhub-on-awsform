@@ -16,10 +16,10 @@
 ---
 > 💡 **Recruiters & Hiring Managers:**  
 > For proof of scale, automation, and AI integration, see “Key Results” and “Screenshots” below.  
-> Connect: [LinkedIn](https://www.linkedin.com/in/deepakaryan1988)
----
+![Roadmap Status](https://img.shields.io/badge/Phase%204-Scaling%20%26%20Observability-blue)
 
----
+The detailed project roadmap (phases, progress, and upcoming milestones) is available here:  
+👉 [View Roadmap](./docs/roadmap.md)
 
 ## 🌟 Why This Project Stands Out for DevOps
 
@@ -226,21 +226,39 @@ terraform apply -auto-approve
 ---
 
 
-## 🗺️ Roadmap
 
-| Phase         | Feature/Focus Area                              | Status         | Highlights                                                                                          |
-| ------------- | ----------------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------- |
-| **Phase 1**   | Core Infrastructure Setup                       | ✅ Completed    | VPC, subnets, security groups, IAM roles, Secrets Manager, modular Terraform baseline               |
-| **Phase 1.5** | ECS Cluster & Service Bootstrapping             | ✅ Completed    | ECS Fargate cluster, ECR repo, basic service deployment (Next.js app + MongoDB Atlas integration)   |
-| **Phase 2**   | CI/CD Pipeline (GitHub Actions)                 | ✅ Completed    | Automated build, test, and deploy pipeline to ECS; secure secret injection from AWS Secrets Manager |
-| **Phase 2.1** | Blue/Green Deployments                          | ✅ Completed    | Zero-downtime ECS deployments with ALB traffic shifting and rollback readiness                      |
-| **Phase 3**   | AI Observability (AWS Bedrock)                  | ✅ Completed    | Claude model summarizes ECS logs via Lambda; outputs to S3 for review                               |
-| **Phase 3.1** | CloudWatch Monitoring + Auto Scaling            | ✅ Completed    | ECS service autoscaling (1→5 tasks) triggered by CPU metrics; SNS alerts configured                 |
-| **Phase 4**   | Advanced DevOps Add-ons                         | 🚧 In Progress | Multi-region readiness, CDN via CloudFront, further IAM hardening, enhanced CI/CD workflows         |
-| **Phase 5.2** | RAG Feedback Search (Claude/Gemini + Vector DB) | ⏳ Planned      | AI-powered semantic search of feedback data                                                         |
-| **Phase 6**   | Optimization & AI Analytics                     | ⏳ Planned      | Cost optimization, disaster recovery, advanced observability dashboards, AI-driven insights         |
+## Roadmap
+
+### **Progress Badges**
+![Phase 1](https://img.shields.io/badge/Phase%201-Core%20Infra-success)
+![Phase 1.5](https://img.shields.io/badge/Phase%201.5-ECS%20Cluster-success)
+![Phase 2](https://img.shields.io/badge/Phase%202-CI%2FCD-success)
+![Phase 2.1](https://img.shields.io/badge/Phase%202.1-Blue%2FGreen-success)
+![Phase 3](https://img.shields.io/badge/Phase%203-AI%20Observability-success)
+![Phase 3.1](https://img.shields.io/badge/Phase%203.1-Monitoring%20%2B%20AutoScaling-success)
+![Phase 4](https://img.shields.io/badge/Phase%204-Advanced%20DevOps-blue)
+![Phase 5.2](https://img.shields.io/badge/Phase%205.2-RAG%20Feedback-lightgrey)
+![Phase 6](https://img.shields.io/badge/Phase%206-Optimization-lightgrey)
 
 ---
+
+### **Phase Overview Table**
+
+| Phase     | Feature / Focus Area                                | Status             | Highlights                                                                                     |
+|-----------|----------------------------------------------------|--------------------|-----------------------------------------------------------------------------------------------|
+| Phase 1   | Core Infrastructure Setup                           | ✅ Completed       | VPC, subnets, security groups, IAM roles, Secrets Manager, modular Terraform baseline         |
+| Phase 1.5 | ECS Cluster & Service Bootstrapping                 | ✅ Completed       | ECS Fargate cluster, ECR repo, basic service deployment (Next.js app + MongoDB Atlas integration) |
+| Phase 2   | CI/CD Pipeline (GitHub Actions)                     | ✅ Completed       | Automated build, test, and deploy pipeline to ECS; secure secret injection from AWS Secrets Manager |
+| Phase 2.1 | Blue/Green Deployments                              | ✅ Completed       | Zero-downtime ECS deployments with ALB traffic shifting and rollback readiness                 |
+| Phase 3   | AI Observability (AWS Bedrock)                      | ✅ Completed       | Claude model summarizes ECS logs via Lambda; outputs to S3 for review                         |
+| Phase 3.1 | CloudWatch Monitoring + Auto Scaling                | ✅ Completed       | ECS service autoscaling (1→5 tasks) triggered by CPU metrics; SNS alerts configured           |
+| Phase 4   | Advanced DevOps Add-ons                             | 🚧 In Progress     | Multi-region readiness, CDN via CloudFront, further IAM hardening, enhanced CI/CD workflows   |
+| Phase 5.2 | RAG Feedback Search (Claude/Gemini + Vector DB)     | ⏳ Planned         | AI-powered semantic search of feedback data                                                   |
+| Phase 6   | Optimization & AI Analytics                         | ⏳ Planned         | Cost optimization, disaster recovery, advanced observability dashboards, AI-driven insights   |
+
+---
+
+📌 **Full detailed roadmap with visual timeline:** [View Roadmap](./docs/roadmap.md)
 
 ## 🛡️ Security & Compliance
 
