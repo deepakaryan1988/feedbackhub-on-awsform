@@ -5,7 +5,7 @@ resource "aws_sns_topic" "alarms" {
 }
 
 locals {
-  sns_topic_arn = var.sns_topic_arn != "" ? var.sns_topic_arn : aws_sns_topic.alarms[0].arn
+  sns_topic_arn = try(var.sns_topic_arn, aws_sns_topic.alarms[0].arn)
 }
 
 resource "aws_cloudwatch_metric_alarm" "cpu_high" {
