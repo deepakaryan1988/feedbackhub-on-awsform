@@ -20,7 +20,7 @@ resource "aws_appautoscaling_policy" "cpu_target_tracking" {
     }
     target_value       = var.target_cpu_utilization
     scale_in_cooldown  = var.scale_in_cooldown
-    scale_out_cooldown = var.scale_out_cooldown
+    scale_out_cooldown = var.enable_scale_out ? var.scale_out_cooldown : 99999999
     disable_scale_in   = !var.enable_scale_in
   }
 }
