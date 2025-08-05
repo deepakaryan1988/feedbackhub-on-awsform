@@ -8,52 +8,6 @@
 ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?logo=githubactions&logoColor=white)
 ![AWS Bedrock](https://img.shields.io/badge/AWS%20Bedrock-FF9900?logo=amazon-aws&logoColor=white)
 
-# 🚀 FeedbackHub on AWSform
-
-> **Enterprise-grade feedback platform:**  
-> AWS ECS Fargate, modular Terraform, Blue/Green deployments, and AI-powered log intelligence for modern DevOps teams.
-
----
-
-> 💡 **Recruiters:**  
-> See “Key Achievements” and “Screenshots” below for proof of scale, automation, and AI integration.  
-> Contact via [LinkedIn](https://www.linkedin.com/in/deepakaryan1988).
-
----
-
-## 📚 Table of Contents
-- [Key Achievements](#key-achievements)
-- [Why This Project Stands Out for DevOps](#why-this-project-stands-out-for-devops)
-- [Tech Stack](#tech-stack)
-- [Architecture](#modern-cloud-architecture)
-- [Screenshots](#monitoring--autoscaling-showcase)
-- [Quickstart](#quickstart)
-- [Roadmap](#roadmap)
-- [Security & Compliance](#security--compliance)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [Author](#author)
-- [License](#license)
-
----
-
-## 📈 Key Achievements
-
-- ⏱️ **Reduced MTTR by up to 60%** with AI-powered log summarization (AWS Bedrock Claude)
-- 🟢 **99.998% success rate** during 50,000-request load test (200 concurrent connections)
-- 🔄 **Zero-downtime deployments** and automated rollback with Blue/Green strategy
-- 📊 **Real-time monitoring and alerting** with CloudWatch and SNS
-- ⚡ **Modular, production-grade Terraform** for rapid, reliable infrastructure changes
-
----
-![CI/CD](https://github.com/deepakaryan1988/feedbackhub-on-awsform/actions/workflows/deploy.yml/badge.svg)
-![Next.js](https://img.shields.io/badge/Next.js-000?logo=nextdotjs&logoColor=white)
-![AWS](https://img.shields.io/badge/AWS-232F3E?logo=amazon-aws&logoColor=white)
-![Terraform](https://img.shields.io/badge/Terraform-623CE4?logo=terraform&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?logo=mongodb&logoColor=white)
-![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?logo=githubactions&logoColor=white)
-![AWS Bedrock](https://img.shields.io/badge/AWS%20Bedrock-FF9900?logo=amazon-aws&logoColor=white)
-
 # FeedbackHub on AWSform
 
 > **Enterprise-grade feedback platform: AWS ECS Fargate, modular Terraform, Blue/Green deployments, and AI-powered log intelligence.**
