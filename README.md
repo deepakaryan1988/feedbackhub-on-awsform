@@ -10,7 +10,14 @@
 
 # FeedbackHub on AWSform
 
+
 > **Enterprise-grade feedback platform: AWS ECS Fargate, modular Terraform, Blue/Green deployments, and AI-powered log intelligence.**
+
+---
+> 💡 **Recruiters & Hiring Managers:**  
+> For proof of scale, automation, and AI integration, see “Key Results” and “Screenshots” below.  
+> Connect: [LinkedIn](https://www.linkedin.com/in/deepakaryan1988)
+---
 
 ---
 
