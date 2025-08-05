@@ -92,6 +92,38 @@ module "ecs_service" {
   tags                = local.common_tags
 }
 
+# ECS Service Auto Scaling
+module "ecs_service_autoscaling" {
+  source                 = "../terraform/autoscaling/ecs_service"
+  ecs_cluster_name       = module.ecs_cluster.cluster_name
+  ecs_service_name       = module.ecs_service.service_name
+  min_capacity           = var.ecs_min_capacity
+  max_capacity           = var.ecs_max_capacity
+  target_cpu_utilization = var.cpu_threshold
+  scale_in_cooldown      = 300
+  scale_out_cooldown     = 60
+  tags                   = local.common_tags
+}
+
+# ECS Service Monitoring/Alarms
+module "ecs_service_alarms" {
+  source                   = "../terraform/monitoring/ecs_service_alarms"
+  ecs_cluster_name         = module.ecs_cluster.cluster_name
+  ecs_service_name         = module.ecs_service.service_name
+  alarm_cpu_high_threshold = 80
+  alarm_cpu_low_threshold  = 20
+  tags                     = local.common_tags
+}
+
+# SNS Email Subscriptions for Alarms
+module "sns_subscriptions" {
+  source = "../terraform/monitoring/sns_subscriptions"
+  
+  sns_topic_arn = module.ecs_service_alarms.sns_topic_arn
+  email_addresses = var.notification_emails
+  tags = local.common_tags
+}
+
 # ECS Service (Green)
 module "ecs_service_green" {
   source = "../terraform/ecs/feedbackhub_service_green"

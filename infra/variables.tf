@@ -163,6 +163,13 @@ variable "bedrock_filter_pattern" {
   default     = ""
 }
 
+# SNS Notifications Configuration
+variable "notification_emails" {
+  description = "List of email addresses to receive SNS notifications for alarms and scaling events"
+  type        = list(string)
+  default     = []
+}
+
 # Tags
 variable "tags" {
   description = "Additional tags to apply to all resources"

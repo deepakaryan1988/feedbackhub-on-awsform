@@ -29,6 +29,12 @@ create_cloudwatch_alarms = true
 cpu_threshold = 80
 memory_threshold = 80
 
+# SNS Notifications Configuration
+notification_emails = [
+  "admin@example.com",
+  "devops@example.com"
+]
+
 # Additional Tags
 tags = {
   Owner       = "devops-team"

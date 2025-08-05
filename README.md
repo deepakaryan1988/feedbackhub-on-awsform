@@ -95,6 +95,48 @@ graph TD
 
 ---
 
+## 📸 Monitoring & Autoscaling Showcase
+
+### 🔥 Real-World Load Testing & Autoscaling
+
+**Load Testing with 50,000 Requests**
+![Load Testing with Hey Tool](docs/screenshots/Scalling-Monitoring-SNS/hey-command.png)
+*Executing intensive load testing with 200 concurrent connections to validate autoscaling behavior*
+
+**ECS Service Scaling in Action**
+![ECS Autoscaling Dashboard](docs/screenshots/Scalling-Monitoring-SNS/autoscalling.png)
+*ECS service automatically scaling from 1 to 5 tasks under high CPU load (99% utilization)*
+
+### 📊 CloudWatch Monitoring Excellence
+
+**High CPU Utilization Alert**
+![CloudWatch CPU High Alarm](docs/screenshots/Scalling-Monitoring-SNS/CPU-High-Traffic.png)
+*CloudWatch alarm triggered at 10% CPU threshold during load testing (peaked at 99% utilization)*
+
+**Normal CPU Utilization State**
+![CloudWatch CPU Normal State](docs/screenshots/Scalling-Monitoring-SNS/CPU-low-traffic.png)
+*System returning to normal state after load testing with proper scaling behavior*
+
+### 🤖 AWS Bedrock AI Integration
+
+**AWS Bedrock Successfully Integrated**
+![AWS Bedrock Integration Success](docs/screenshots/AWS-Bedrock/AWS-Bedrock-successfully-integrated.png)
+*AWS Bedrock Claude AI model successfully processing ECS logs for intelligent summarization*
+
+**Web-Based Bedrock Proof**
+![AWS Bedrock Web Interface](docs/screenshots/AWS-Bedrock/AWS-Bedrock-web-proof.png)
+*Web interface demonstrating AWS Bedrock AI-powered log summarization in action*
+
+### 🎯 Key Achievements Demonstrated
+
+- **✅ Autoscaling**: ECS service scaled from 1→5 tasks under load (400% scale-up)
+- **✅ Monitoring**: CloudWatch alarms triggered at 10% CPU threshold with SNS notifications
+- **✅ Load Testing**: 50,000 requests with 200 concurrent connections (99.998% success rate)
+- **✅ AI Integration**: AWS Bedrock Claude processing logs for intelligent summarization
+- **✅ Production Ready**: Zero-downtime scaling with proper monitoring and alerting
+
+---
+
 ## ⚡ Quickstart
 
 ### Local Development
