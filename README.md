@@ -33,46 +33,49 @@
 ---
 
 ## 🏗️ Modern Cloud Architecture
-
-![Architecture Diagram](https://placehold.co/800x400?text=Replace+with+your+Architecture+Diagram)
-
 <details>
 <summary>System Architecture (Mermaid)</summary>
 
 ```mermaid
 graph TD
-    subgraph "Frontend"
-        UI[Next.js UI]
+    subgraph "User"
+        BROWSER[Web Browser]
     end
-    subgraph "Backend"
-        API[Next.js API Routes]
-        DB[(MongoDB Atlas)]
-    end
-    subgraph "AWS Infrastructure"
+    subgraph "AWS"
         ALB[Application Load Balancer]
-        ECS[ECS Fargate Cluster]
+        ECS_CLUSTER[ECS Fargate Cluster]
+        ECS_BLUE[ECS Service (Blue)]
+        ECS_GREEN[ECS Service (Green)]
+        TASK[Next.js App Container]
         CW[CloudWatch Logs]
-        LAMBDA[Lambda Bedrock Summarizer]
+        LAMBDA[Lambda: Bedrock Log Summarizer]
         BEDROCK[AWS Bedrock Claude]
-        S3[S3 Summary Storage]
+        S3[S3: Log Summaries]
         SECRETS[AWS Secrets Manager]
     end
     subgraph "CI/CD"
-        GH[GitHub Actions]
+        GHA[GitHub Actions]
         ECR[ECR Repository]
     end
-    UI --> ALB
-    ALB --> ECS
-    ECS --> API
-    API --> DB
-    ECS --> CW
+    subgraph "Database"
+        MDB[(MongoDB Atlas)]
+    end
+
+    BROWSER --> ALB
+    ALB --> ECS_CLUSTER
+    ECS_CLUSTER --> ECS_BLUE
+    ECS_CLUSTER --> ECS_GREEN
+    ECS_BLUE --> TASK
+    ECS_GREEN --> TASK
+    TASK --> MDB
+    TASK --> SECRETS
+    TASK --> CW
     CW --> LAMBDA
     LAMBDA --> BEDROCK
     BEDROCK --> LAMBDA
     LAMBDA --> S3
-    ECS --> SECRETS
-    GH --> ECR
-    ECR --> ECS
+    GHA --> ECR
+    ECR --> ECS_CLUSTER
 ```
 </details>
 
