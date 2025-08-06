@@ -101,13 +101,15 @@ To maximize productivity and clarity, this project supports dedicated Copilot/AI
 This approach ensures that Copilot/AI responses are tailored, actionable, and aligned with best practices for each domain.
 
 
+
 ## Workflow: Markdown Todo List Protocol
 
+- **Copilot must automatically update and display the markdown todo list after every step, immediately after completing each action, so the user always sees the current status in real time.**
 - **Always create a markdown todo list before taking any action.**
   - Break down the solution into clear, incremental steps.
   - Use standard markdown format for todo lists (with `- [ ]` for incomplete and `- [x]` for completed steps).
   - After each step, update the todo list by checking off the completed step (`- [x]`).
-  - Always display the updated todo list to the user after each step, so progress is visible.
+  - Always display the updated todo list to the user after each step, so progress is visible and real-time.
   - For long or complex todo lists, use emoji (✅, ⏳, 🚧) or progress bars to make status visually clear.
   - If a step fails, display the error, update the todo list to reflect the failure, and attempt to resolve the issue before proceeding.
   - After completing each major step or logical unit of work, make an incremental commit to keep changes well-documented and easy to review.
