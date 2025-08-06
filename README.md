@@ -161,6 +161,7 @@ By exploring this project, you will learn how to:
 
 
 
+
 ## 📈 Key Results
 
 - **Reduced MTTR by up to 60%** with AI-powered log summarization (AWS Bedrock Claude)
@@ -168,6 +169,25 @@ By exploring this project, you will learn how to:
 - **Zero-downtime deployments** and automated rollback with Blue/Green strategy
 - **Real-time monitoring and alerting** with CloudWatch and SNS
 - **Modular, production-grade Terraform** for rapid, reliable infrastructure changes
+
+---
+
+## 📊 Service-to-Feature Map
+
+> *This table summarizes our Cloud + AI implementation stack — making it easier for recruiters, collaborators, and technical reviewers to quickly see the scope of services and features.*
+
+| **Category** | **Key Services / Tools** | **Highlights** |
+|--------------|----------------|--------------|
+| **Infrastructure as Code** | Terraform (modular) | VPC, subnets, route tables, security groups, ECS, RDS, ALB fully automated |
+| **Container Orchestration** | ECS (Fargate) + ECR | Containerized Next.js app, Blue/Green deployments, ALB routing |
+| **CI/CD** | GitHub Actions | Automated build, test, deploy with secrets from Secrets Manager |
+| **Observability** | AWS Bedrock + Lambda + CloudWatch | AI-powered ECS log summaries (Claude), log groups, metrics tracking |
+| **Scaling & Monitoring** | CloudWatch + SNS + ECS Autoscaling | CPU-triggered scale-out (1→5 tasks), SNS email alerts, tested via load simulation |
+| **Secrets & Security** | AWS Secrets Manager + IAM | Secure storage & rotation of DB/API creds, least-privilege IAM roles |
+| **Persistence & Storage** | RDS (MongoDB Atlas / Postgres) + S3 | Application DB, persistent logs/snapshots, file storage |
+| **AI-Augmented Features (Planned)** | Claude, Gemini, RAG stack | Feedback classification, AI-powered analytics, retrieval from S3/DynamoDB |
+| **Advanced Deployment (Planned)** | EKS (Kubernetes) + Helm | Multi-service orchestration, autoscaling pods, service mesh |
+| **MLOps & AgentOps (Planned)** | SageMaker + MLflow + Agent workflows | Model deployment pipelines, AI agent triggers via GitOps |
 
 ---
 
