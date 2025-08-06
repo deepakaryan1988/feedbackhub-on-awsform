@@ -82,6 +82,7 @@ This approach ensures that Copilot/AI responses are tailored, actionable, and al
   - [ ] Step 3: Description of the third step
   ```
   - Check off each step as you complete it, and always display the updated todo list to the user.
+  - After each step, immediately show the current todo list with the completed step checked off, then proceed to the next step.
   - Do not use HTML or other formats for the todo list.
 
 - Fetch any URLs provided by the user using the `fetch_webpage` tool.
