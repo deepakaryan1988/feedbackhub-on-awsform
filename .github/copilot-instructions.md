@@ -1,8 +1,24 @@
 
+
 # GitHub Copilot Instructions – FeedbackHub-on-AWS
 
+## Priority Guidelines
+
+When generating code for this repository:
+
+1. **Version Compatibility**: Always detect and respect the exact versions of languages, frameworks, and libraries used in this project. Examine `package.json`, `requirements.txt`, and other config files. Never use features not available in the detected versions.
+2. **Context Files**: Prioritize patterns and standards defined in the `.github/instructions/` and `.github/copilot/` directories.
+3. **Codebase Patterns**: When context files don't provide specific guidance, scan the codebase for established naming, organization, error handling, and testing patterns. Always match the most consistent and recent patterns found in the codebase.
+4. **Architectural Consistency**: Maintain the modular, microservices-inspired architecture. Respect boundaries between Terraform modules, app components, and infrastructure layers. Do not introduce monolithic or tightly coupled patterns.
+5. **Code Quality**: Prioritize maintainability, security, performance, and testability in all generated code. Follow the same documentation and commenting style as found in the codebase.
+
+
+
 ## How to Use
-This project uses a modular Copilot setup for maximum productivity and clarity.
+This project uses a modular Copilot setup for maximum productivity and clarity. Always:
+- Scan the codebase for technology versions and patterns before generating code
+- Match code organization, naming, and error handling to existing files
+- Never introduce patterns not found in the codebase
 
 ### 📁 Organization
 - `.github/instructions/`: Project- and stack-specific Copilot instructions (e.g., Next.js, Terraform, DevOps, Security, Docker, etc.)
@@ -84,47 +100,77 @@ To maximize productivity and clarity, this project supports dedicated Copilot/AI
 
 This approach ensures that Copilot/AI responses are tailored, actionable, and aligned with best practices for each domain.
 
-## Workflow
+
+## Workflow: Markdown Todo List Protocol
 
 - **Always create a markdown todo list before taking any action.**
-  - This todo list should break down the solution into clear, incremental steps.
-  - Use the following format:
-
-  ```markdown
-  - [ ] Step 1: Description of the first step
-  - [ ] Step 2: Description of the second step
-  - [ ] Step 3: Description of the third step
-  ```
-  - Check off each step as you complete it, and always display the updated todo list to the user.
-  - After each step, immediately show the current todo list with the completed step checked off, then proceed to the next step.
-  - For long or complex todo lists, consider using emoji (✅, ⏳, 🚧) or progress bars to make status visually clear.
-  - If a step fails, display the error, update the todo list to reflect the failure, and attempt to resolve the issue before proceeding to the next step.
+  - Break down the solution into clear, incremental steps.
+  - Use standard markdown format for todo lists (with `- [ ]` for incomplete and `- [x]` for completed steps).
+  - After each step, update the todo list by checking off the completed step (`- [x]`).
+  - Always display the updated todo list to the user after each step, so progress is visible.
+  - For long or complex todo lists, use emoji (✅, ⏳, 🚧) or progress bars to make status visually clear.
+  - If a step fails, display the error, update the todo list to reflect the failure, and attempt to resolve the issue before proceeding.
   - After completing each major step or logical unit of work, make an incremental commit to keep changes well-documented and easy to review.
   - If you need to pause your work, note the last completed step. To resume, simply continue from the next incomplete step in the todo list.
-  - For reference, see the example below of a completed todo list:
   - If multiple contributors are working on the same issue, assign steps, update the todo list collaboratively, and communicate progress frequently to avoid duplication.
-  - After all steps are checked off, take a moment to review the solution, check for edge cases, and document any lessons learned or follow-up actions.
-  - (Optional) Consider using a script or tool to auto-generate markdown todo lists from issue descriptions or PR templates to streamline workflow setup.
+  - After all steps are checked off, review the solution, check for edge cases, and document any lessons learned or follow-up actions.
 
-  ```markdown
-  - [x] Step 1: Do the first thing
-  - [x] Step 2: Do the next thing
-  - [x] Step 3: Finalize and review
-  ```
-  - Do not use HTML or other formats for the todo list.
+**Example Todo List:**
+```markdown
+- [ ] Step 1: Do the first thing
+- [ ] Step 2: Do the next thing
+- [ ] Step 3: Finalize and review
+```
+
+**Example After Completing Step 1:**
+```markdown
+- [x] Step 1: Do the first thing
+- [ ] Step 2: Do the next thing
+- [ ] Step 3: Finalize and review
+```
+
+**For complex tasks:**
+```markdown
+- [x] Step 1: Setup (✅)
+- [x] Step 2: Implement feature (✅)
+- [ ] Step 3: Test thoroughly (⏳)
+- [ ] Step 4: Document and clean up (🚧)
+```
 
 - Fetch any URLs provided by the user using the `fetch_webpage` tool.
-- Understand the problem deeply. Carefully read the issue and think critically about what is required. Use sequential thinking to break down the problem into manageable parts.
-- Investigate the codebase. Explore relevant files, search for key functions, and gather context.
-- Research the problem on the internet by reading relevant articles, documentation, and forums.
-- Develop a clear, step-by-step plan. Break down the fix into manageable, incremental steps. Display those steps in a simple todo list using standard markdown format. Make sure you wrap the todo list in triple backticks so that it is formatted correctly.
-- Implement the fix incrementally. Make small, testable code changes.
-- Debug as needed. Use debugging techniques to isolate and resolve issues.
+- Carefully read the issue and think critically about what is required. Use sequential thinking to break down the problem into manageable parts.
+- Investigate the codebase for relevant files, key functions, and context.
+- Research the problem as needed, but always prioritize codebase and context file patterns.
+- Develop a clear, step-by-step plan and display it as a markdown todo list.
+- Implement the fix incrementally, making small, testable code changes.
+- Debug as needed, using techniques to isolate and resolve issues.
 - Test frequently. Run tests after each change to verify correctness.
 - Iterate until the root cause is fixed and all tests pass.
-- Reflect and validate comprehensively. After tests pass, think about the original intent, write additional tests to ensure correctness, and remember there are hidden tests that must also pass before the solution is truly complete.
+- Reflect and validate comprehensively. After tests pass, write additional tests if needed and ensure all requirements are met.
 
-Refer to the detailed sections below for more information on each step.
+## Code Quality and Testing
+
+- Match the structure and style of existing unit, integration, and E2E tests.
+- Use the same assertion and mocking patterns as in current tests.
+- Follow the same documentation and commenting style as found in the codebase.
+- When in doubt, prioritize consistency with existing code over external best practices or new language features.
+
+## Version Control and Changelog
+
+- Follow semantic versioning for all modules and document breaking changes as in the codebase.
+
+## General Best Practices
+
+- Never introduce patterns not found in the codebase.
+- Respect existing architectural boundaries without exception.
+- Match the style and patterns of surrounding code.
+
+## Project-Specific Guidance
+
+- Scan the codebase thoroughly before generating any code.
+- Respect existing architectural boundaries and modularity.
+- Always match the style, naming, and organization of existing code.
+- When in doubt, prioritize consistency with existing code over external best practices.
 ## Testing & Validation
 - Run all tests and validate Terraform plans before merging.
 - Use GitHub Actions CI/CD for every PR and deployment.
