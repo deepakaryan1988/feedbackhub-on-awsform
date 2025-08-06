@@ -2,7 +2,21 @@
 # GitHub Copilot Instructions – FeedbackHub-on-AWS
 
 ## How to Use
-Paste these instructions into Copilot Chat or ChatGPT for context-aware code generation, reviews, and onboarding.
+This project uses a modular Copilot setup for maximum productivity and clarity.
+
+### 📁 Organization
+- `.github/instructions/`: Project- and stack-specific Copilot instructions (e.g., Next.js, Terraform, DevOps, Security, Docker, etc.)
+- `.github/prompts/`: Reusable prompt templates for architecture, testing, automation, and documentation
+- `.github/chatmodes/`: Custom chat mode instructions for specialized workflows (e.g., Beast Mode, Debug Mode, Planning, etc.)
+
+### 🚀 How to Use
+- Reference or copy any file from these folders into Copilot Chat or ChatGPT for context-aware code generation, reviews, and onboarding.
+- In VS Code Copilot Chat, you can:
+  - Paste the contents of an instruction, prompt, or chat mode file to activate it for your session
+  - Use the "Chat: Run Prompt" command or `/prompt-name` to run a reusable prompt
+  - Switch chat modes for role-specific workflows (see `.github/chatmodes/`)
+
+For more, see the [awesome-copilot repo](https://github.com/github/awesome-copilot) for updates and new templates.
 
 ## 1️⃣ Project Summary
 FeedbackHub-on-AWS is a production-grade feedback platform built with **Next.js** and deployed on **AWS ECS Fargate**. Infrastructure is fully managed via **modular Terraform**. MongoDB Atlas is the primary database. AWS Secrets Manager handles credentials. Deployments use **Blue/Green** via ALB. Auto Scaling + CloudWatch alarms are configured.
