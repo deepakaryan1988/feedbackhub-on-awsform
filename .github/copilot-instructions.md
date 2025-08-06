@@ -83,6 +83,20 @@ This approach ensures that Copilot/AI responses are tailored, actionable, and al
   ```
   - Check off each step as you complete it, and always display the updated todo list to the user.
   - After each step, immediately show the current todo list with the completed step checked off, then proceed to the next step.
+  - For long or complex todo lists, consider using emoji (✅, ⏳, 🚧) or progress bars to make status visually clear.
+  - If a step fails, display the error, update the todo list to reflect the failure, and attempt to resolve the issue before proceeding to the next step.
+  - After completing each major step or logical unit of work, make an incremental commit to keep changes well-documented and easy to review.
+  - If you need to pause your work, note the last completed step. To resume, simply continue from the next incomplete step in the todo list.
+  - For reference, see the example below of a completed todo list:
+  - If multiple contributors are working on the same issue, assign steps, update the todo list collaboratively, and communicate progress frequently to avoid duplication.
+  - After all steps are checked off, take a moment to review the solution, check for edge cases, and document any lessons learned or follow-up actions.
+  - (Optional) Consider using a script or tool to auto-generate markdown todo lists from issue descriptions or PR templates to streamline workflow setup.
+
+  ```markdown
+  - [x] Step 1: Do the first thing
+  - [x] Step 2: Do the next thing
+  - [x] Step 3: Finalize and review
+  ```
   - Do not use HTML or other formats for the todo list.
 
 - Fetch any URLs provided by the user using the `fetch_webpage` tool.
